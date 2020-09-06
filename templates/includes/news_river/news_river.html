@@ -1,0 +1,549 @@
+<!--Yorumların listelenmesi-->
+{% load static %}
+{% block head %}
+    {% load pie_thing_filters %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $window=$(this);
+        $window.on("click",".everymove",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $id=$this.attr("id")
+            $('.everymove').removeClass("active")
+
+            if ($id=="cotab"){
+                $('#codiv').removeClass("hidden")
+                $('#thdiv').addClass("hidden")
+                $('#usdiv').addClass("hidden")
+                $this.addClass("active")
+
+            }
+            else if ($id=="thtab"){
+                $('#thdiv').removeClass("hidden")
+                $('#codiv').addClass("hidden")
+                $('#usdiv').addClass("hidden")
+                $this.addClass("active")
+            }
+            else if ($id=="ustab"){
+                $('#usdiv').removeClass("hidden")
+                $('#codiv').addClass("hidden")
+                $('#thdiv').addClass("hidden")
+                $this.addClass("active")
+            }
+
+        })
+        $window.on("click",".post-content",function (e) {
+            var $this=$(this)
+            var $url=$this.attr("url")
+            if (!$(".gitme").is(e.target)
+          && $(".gitme").has(e.target).length === 0)
+      {
+        window.location.href = $url;
+      }
+
+
+        })
+
+        $window.on("click",".repost-but",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $url=$this.attr("href")
+            var $furl=$this.attr("url")
+            var $modal=$window.find("#repost")
+            var $form=$modal.find(".repostnow")
+                $form.attr("action",$furl)
+            var $div=$window.find("#comment")
+            $.ajax({
+                url: $url,
+                type: 'GET',
+                dataType: "json",
+                success:function (data) {
+
+                   $div.html(data.form_html)
+                    $modal.modal("show")
+                    console.log()
+                }
+            })
+        }).on("submit",".repostnow",function (e) {
+            e.preventDefault();
+
+            $form = $(this)
+            var $modal=$("#repost")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".rep-but",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $modal=$("#report")
+                $modal.modal("show")
+            var $form=$modal.find(".reportnow")
+            var $href=$this.attr("href")
+                $form.attr("action",$href)
+        }).on("submit",".reportnow",function (e) {
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#report")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".same-but",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $modal=$("#same")
+                $modal.modal("show")
+            var $form=$modal.find(".samenow")
+            var $href=$this.attr("href")
+                $form.attr("action",$href)
+        }).on("submit",".samenow",function (e) {
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#same")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".del-but",function (e) {
+           e.preventDefault()
+           var $this=$(this)
+           $div=$this.closest("div").parent().parent().parent().parent().parent()
+           var $href=$this.attr("href")
+           var $modal=$("#areusure")
+           var $del= $modal.find(".deletenow")
+            $del.attr("href",$href)
+           $modal.modal("show")
+
+        })
+        .on("click",".deletenow",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $url=$this.attr("href")
+            var $modal=$("#areusure")
+
+            $.ajax({
+                url:$url,
+                method:"GET",
+                data:{"profile":"profile"},
+                success:function (data) {
+
+                    $modal.modal('hide')
+                    $div.remove()
+
+                }
+            })
+
+        })
+        $window.on("click",".sup-but",function (e) {
+            e.preventDefault()
+            var $this=$(this);
+            var $url =$this.attr("href")
+            var $div=$this.closest("div").parent()
+
+            $.ajax({
+
+                url:$url,
+                method:"GET",
+                data:{},
+                success: function (data) {
+                    $div.html(data.reaction_html)
+
+                }
+            })
+        }).on("click",".sup-count",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $url=$this.attr("url")
+            var $modal=$("#comment_sup_modal")
+            $.ajax({
+                url:$url,
+                method:"GET",
+                dataType:"json",
+                beforeSend:function () {
+
+                    $modal.modal("show")
+                },
+                success:function (data) {
+                    $modal.find(".modal-body").html(data.html)
+
+                },
+                error:function () {
+                }
+            })
+
+        })
+        $window.on("click","#thing-comment-list  a.reply-but",function (e) {
+            e.preventDefault();
+
+
+            var $this=$(this)
+            var $parent=$this.closest("div").parent().parent()
+            var $href = $this.attr("href")
+            var $comment_id=$this.attr("comment_id")
+            $.ajax({
+                url: $href,
+                type:"GET",
+                dataType:"json",
+                data:{comment_id: $comment_id},
+                success:function (data) {
+                    var $form_html =data.form_html;
+                    $parent.find(".child-form").html($form_html)
+
+                },
+                error:function () {
+
+                }
+            })
+        })
+        $window.on("click",".options",function (e) {
+            e.preventDefault();
+            var $this=$(this)
+            var $href=$this.attr("href")
+            var $opt=$this.attr("opt")
+            var $id=$this.attr("id")
+            var $div=$(".opening-comment")
+            $.ajax({
+                url:$href,
+                type:"GET",
+                dataType:"json",
+                data:{opt:$opt,id:$id},
+                success:function (data) {
+                    console.log($opt)
+                    var $form_html=data.form_html
+                    $div.html($form_html)
+
+
+                },
+                error:function (data) {
+                    console.log("big error")
+                }
+            })
+
+        })
+        $('.justmove').click(function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $id = $this.attr("id")
+            $('.justmove').removeClass("active")
+
+            if ($id=="envtab"){
+                $('.envdiv').removeClass("hidden")
+                $('.disdiv').addClass("hidden")
+                $this.addClass("active")
+            }
+            else if($id=="distab")
+            {
+                 $('.disdiv').removeClass("hidden")
+                $('.envdiv').addClass("hidden")
+                $this.addClass("active")
+            }
+        })
+    })
+</script>
+
+{% endblock %}
+{% include "includes/deleting/comment-delete-modal.html" %}
+
+{% if is_search %}
+    <h6>Arama sonuçlarını şekillendir;</h6>
+    <ul class="nav nav-tabs">
+        <li class="active  everymove" id="cotab" ><a href="#">Yorumlar ({{ comments.count }})</a></li>
+        <li class="disbled  everymove text-muted" id="thtab"><a href=""  >Tartışmalar ({{ things.count }})</a></li>
+        <li class="disbled  everymove text-muted" id="ustab"><a href="" >Kişiler ({{ users.count }})</a></li>
+    </ul>
+
+     <br>
+
+    <!--VARSAYILAN OLARAK "YORUMLAR SEKMESİ AKTİFTİR"-->
+    <div class="search-div" id="codiv">
+    {% if comments.count == 0 %}
+
+    <div class="d-flex justify-content-center align-items-center" id="main">
+    <h1 class="mr-3 pr-3 align-top border-right inline-block align-content-center">Böyle bir yorum yok!</h1>
+    	<h2 class="font-weight-normal lead" id="desc">Zor bir ihtimali başardınız. Çünkü aramanızı içeren hiçbir yorum yok. </h2>
+</div>
+    {% endif %}
+    {% for comment in comments %}
+
+    {% include "includes/comment/single-comment.html" with thing=comment.content_object comment=comment %}
+
+    {% endfor %}
+    </div>
+    <!--VARSAYILAN OLARAK "YORUMLAR SEKMESİ AKTİFTİR"-->
+
+    <!--THING LIST-->
+    <div class="search-div hidden" id="thdiv" >
+    {% if things.count == 0 %}
+    <div class="d-flex justify-content-center align-items-center" id="main">
+    <h1 class="mr-3 pr-3 align-top border-right inline-block align-content-center">Böyle bir tartışma yok!</h1>
+    	<h2 class="font-weight-normal lead" id="desc">Ancak isterseniz bu tartışmayı siz başlatabilirsiniz. </h2>
+</div>
+    {% endif %}
+    {% for post in things %}
+            <div class="post-content gitme">
+   <div class="post-container">
+      <div class="card text-center">
+         <div class="card-header">
+             <img src="{{post.author.userprofile.get_profile_photo}} " class="profile-photo-sm" />
+
+            <h5><a  class="profile-link" style="color: #2f2fa2;"> {{ post.author.get_full_name }} </a> <span
+                        class="following">*{{ post.author }}</span>
+                    </h5>
+         </div>
+         <div class="line-divider"></div>
+         <div class="card-body">
+               <!-- Başlık -->
+            <div class="discussion-title">
+                <h4>{{ post.title}}</h4>
+              <h2> {{ post.opt1 }} <span> V </span> {{ post.opt2 }} </h2>
+            </div>
+             {% if post.get_percent != "zero" %}
+
+            <!-- Yüzde bar-->
+            <div class="progress" id="thing_progress">
+               <div class="progress-bar progress-bar-striped color1" role="progressbar" style="width: {{post.get_percent.1}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> <b> %{{post.get_percent.1}} </b>{{post.opt1}}</div>
+              <div class="progress-bar progress-bar-striped color2" role="progressbar" style="width: {{post.get_percent.3}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> <b> %{{post.get_percent.3}} </b>Tarafsız</div>
+              <div class="progress-bar progress-bar-striped color3" role="progressbar" style="width: {{post.get_percent.2}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"><b>%{{post.get_percent.2}}</b> {{ post.opt2 }}</div>
+            </div>
+                 {% else %}
+                 <div class="progress" id="thing_progress">
+              <div class="progress-bar progress-bar-striped color2" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> Henüz kimse yok</div>
+            </div>
+             {% endif %}
+
+            <p class="card-text">{{ post.content|truncatechars:20 }}</p>
+            <a href="{% url "pie_thing:thing" post.id %}" class="btn btn-primary">Tartışmaya Atla</a>
+         </div>
+         <br>
+         <div class="line-divider"></div>
+         <div class="card-footer text-muted">
+             {{ post.created_date|timesince}} önce
+         </div>
+      </div>
+   </div>
+</div>
+
+    {% endfor %}
+
+    </div>
+    <!--THING LIST-->
+
+    <!--USER LIST-->
+    <div class="search-div hidden" id="usdiv">
+    {% if users.count == 0 %}
+    <div class="d-flex justify-content-center align-items-center" id="main">
+    <h1 class="mr-3 pr-3 align-top border-right inline-block align-content-center">Böyle bir kişi yok!</h1>
+    	<h2 class="font-weight-normal lead" id="desc">Aradığınız kişiyi bulamadık. Ya arama algoritma yeterince iyi değil ya da PieThing'de böyle bir kişi yok. (Umarız böyle bir kişi yoktur) </h2>
+</div>
+    {% endif %}
+    {% for user in users %}
+
+    <div class="post-content gitme">
+   <div class="post-container">
+      <img src="{{ user.userprofile.get_profile_photo}}" alt="user" class="profile-photo-md pull-left gitme">
+      <div class="post-detail">
+         <div class="user-info">
+            <h5>
+               <a href="{% url "user:profile" user %}" class="profile-link gitme" style="color: #2f2fa2;">{{ user.full_name }}</a> <span class="following">*{{ user }}</span>
+               <div style="float: right;">
+                   <a href="{% url "user:profile" user %}" class="btn btn-primary">Profile Git</a>
+
+               </div>
+            </h5>
+         </div>
+         <div class="post-text gitme">
+            <p><b>~</b> {{ user.userprofile.bio }}</p>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+    {% endfor %}
+
+
+    </div>
+
+
+    <!--USER LIST-->
+{% else %}
+
+        <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs">
+  <li class="active justmove" id="envtab"><a href="#">Çevrendekiler</a></li>
+  <li class="visible-sm visible-xs justmove" id="distab"><a href="#">Tartışılanlar</a></li>
+  <li class="disabled"><a data-toggle="tooltip" title="Beta Sürümde Keşfet Kısmı Kullanılamaz!" >Keşfet</a></li>
+</ul>
+    </ul>
+    <br>
+
+<div class="col-md-2 static hidden disdiv">
+            <div class="suggestions" id="sticky-sidebar">
+              <h4 class="grey">Tartışılanlar </h4>
+                {% for thing in  tt%}
+                    <div class="follow-user" data-toggle="tooltip" title="{{thing.opt1}} V {{thing.opt2}}" >
+                  <h5><a href="{% url "pie_thing:thing" thing.id %}"> {{ forloop.counter }}- {{ thing.title}} </a></h5>
+                  {% if thing.get_percent != "zero" %}
+                  <div class="progress" style="height: 5px;">
+                    <div class="progress-bar color1" role="progressbar" style="width: {{thing.get_percent.1}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar color2" role="progressbar" style="width: {{thing.get_percent.3}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar color3" role="progressbar" style="width: {{thing.get_percent.2}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+
+                  </div>
+                  {% else %}
+                      <div class="progress" style="height: 5px"> <div class="progress-bar color4" role="progressbar" style="width:100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div></div>
+
+                  {% endif %}
+                  <h6 href="#" class="text-green">{{ thing.get_comment_count }} yorum</h6>
+              </div>
+                {% endfor %}
+
+
+
+
+            </div>
+          </div>
+
+<div class="infinite-container envdiv">
+
+{% if posts == "YOK" %}
+    <div class="post-content gitme ">
+
+              <div class="post-container">
+                <img src="{% static "images/logo_pp.png" %} " class="profile-photo-md pull-left" />
+                <div class="post-detail">
+                  <div class="user-info">
+                    <h5><a  class="profile-link" style="color: #2f2fa2;"> PieThing </a> <span
+                        class="following">*PieThing</span>
+                    </h5>
+                    <p class="text-muted"> PieThing'e Hoşgeldin !</p>
+                  </div>
+                  <div class="line-divider"></div>
+                  <div class="post-text">
+                    <p> Eğer bu yazıyı görüyorsan ya henüz yeni kayıt oldun ya da henüz kimseyi takip etmiyorsun.
+                        Seni aramızda gördüğümüz için çok mutluyuz ! Tartışmaya hazır olduğunu görüyoruz. Nereden mi anladık ? Gözlerinde tam bir tartışmacı havası var :) (Merak etme seni izlemiyoruz) </p>
+
+                    <p> Sana site hakkında bir kaç şey belirtmek isteriz. Tartışma başlıklarının altında gördüğün barlar tartışma konusunda ki tarafların hangisinin önde olduğunu gösterir. İstersen sen de "Tartışma Başlat" butonunu kullanarak
+                      tartışmanı başlatabilirsin.</p>
+                      <p> Tartışmalarda okuduğun bir düşünceyi beğenebilir, beğenmeyebilir, yorum atabilir veya profilinde paylaşabilirsin ! Butonlar düşüncelerin altında seni bekliyor olacak.</p>
+                      <p> Profil ya da kapak fotoğrafını değiştirmek için "Profil" seçeneğine tıklayabilir oradan kamera simgesini kullanarak istediğin profil ve kapak fotoğrafını koyabilirsin ! </p>
+                      <p> Yeni insanlar takip edebilir, takipçiler kazanabilirsin. Unutma, ne kadar iyi bir tartışmacı olursan o kadar çok takipçin olur. Bu gizli bilgiyi de verdiğimize göre başlamamak için bir sebebin kalmadı.</p>
+                      <p> Aslına bakarsan yazmakla geceyi gün edeceğimiz daha çok şey var ancak seni çok oyalamak istemeyiz. <p></p>
+                      <p> Son olarak herhangi bir problem yaşarsan veya tavsiye vermek istersen bizlere ekranın sağında ki "Bize Ulaşın" butonu ile mesajını iletebilirsin. Buralarda olacağız.</p>
+                      <p> İyi tartışmalar !</p>
+                      <p style="float:right"> PieThing Ekibi</p>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+{% else %}
+
+{% for post in posts  %}
+    {% if post|isim_bukucu == "Comment" %}
+        {% if not post.is_anon %}
+                 {% include "includes/comment/single-comment.html" with thing=post.content_object comment=post %}
+        {% endif %}
+    {% elif post|isim_bukucu == "Thing" %}
+        <div class="post-content gitme infinite-item">
+   <div class="post-container">
+      <div class="card text-center">
+         <div class="card-header">
+             <img src="{{post.author.userprofile.get_profile_photo}} " class="profile-photo-sm" />
+
+            <h5><a  class="profile-link" style="color: #2f2fa2;" href="{% url "user:profile" post.author %}"> {{ post.author.get_full_name }} </a> <span
+                        class="following">*{{ post.author }}</span>
+                    </h5>
+         </div>
+         <div class="line-divider"></div>
+         <div class="card-body">
+               <!-- Başlık -->
+            <div class="discussion-title">
+                <h4>{{ post.title}}</h4>
+              <h2> {{ post.opt1 }} <span> V </span> {{ post.opt2 }} </h2>
+            </div>
+             {% if post.get_percent != "zero" %}
+
+            <!-- Yüzde bar-->
+            <div class="progress" id="thing_progress">
+               <div class="progress-bar progress-bar-striped color1" role="progressbar" style="width: {{post.get_percent.1}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> <b> %{{post.get_percent.1}} </b>{{post.opt1}}</div>
+              <div class="progress-bar progress-bar-striped color2" role="progressbar" style="width: {{post.get_percent.3}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> <b> %{{post.get_percent.3}} </b>Tarafsız</div>
+              <div class="progress-bar progress-bar-striped color3" role="progressbar" style="width: {{post.get_percent.2}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"><b>%{{post.get_percent.2}}</b> {{ post.opt2 }}</div>
+            </div>
+                 {% else %}
+                 <div class="progress" id="thing_progress">
+              <div class="progress-bar progress-bar-striped color2" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> Henüz kimse yok</div>
+            </div>
+             {% endif %}
+
+            <p class="card-text">{{ post.content|truncatechars:200 }}</p>
+            <a href="{% url "pie_thing:thing" post.id %}" class="btn btn-primary">Tartışmaya Atla</a>
+         </div>
+         <br>
+         <div class="line-divider"></div>
+         <div class="card-footer text-muted">
+             {{ post.created_date|timesince }} önce
+         </div>
+      </div>
+   </div>
+</div>
+
+    {% endif %}
+
+{% endfor %}
+{% endif %}
+
+</div>
+
+
+
+ <div class="loading col-lg-12 text-center" style="display: none;">
+    <img src="{% static "images/loading.gif" %}">
+  </div>
+
+  {% if posts.has_next %}
+    <a class="infinite-more-link"  href="?page={{ posts.next_page_number }}">Daha Fazlasını Göster</a>
+  {% endif %}
+{% endif %}

@@ -1,0 +1,46 @@
+{% load following_system %}
+    {% for row in following  %}
+        <div class="follow col-lg-12">
+            {% if follow_type == "followeds" %}
+                <img src="{{ row.followed.userprofile.get_profile_photo }}" style="width: 70px;" class="img-circle">
+                <a href="{% url "user:profile" row.followed.username %}"><span follower="{{ request.user.username }}" followed="{{ row.followed.username }}">{{ row.followed.username }}</span></a>
+                {% if row.followed != request.user %}
+                    {% if row.followed|who_is_my_followed:my_followed %}
+                        <button style="float: right" class="follow-button pull-right btn btn-success">
+                            Takip Eyle
+                        </button>
+                    {% else %}
+                        <button style="float: right" class="follow-button pull-right btn btn-info">
+                            Takipten Çık
+                        </button>
+                    {% endif %}
+
+
+
+                {% endif %}
+            {% elif follow_type == "followers" %}
+                <img src="{{ row.follower.userprofile.get_profile_photo }}" style="width: 70px;" class="img-circle">
+                <a href="{% url "user:profile" row.followed.username %}"><span follower="{{ request.user.username }}" followed="{{ row.follower.username }}">{{ row.follower.username }}</span></a>
+                {% if row.follower != request.user %}
+                 {% if row.follower|who_is_my_followed:my_followed %}
+                        <button style="float: right" class="follow-button pull-right btn btn-success">
+                            Takip Eyle
+                        </button>
+                    {% else %}
+                        <button style="float: right" class="follow-button pull-right btn btn-info">
+                            Takipten Çık
+                        </button>
+                    {% endif %}
+
+
+                {% endif %}
+            {% endif %}
+
+        </div>
+        {% empty %}
+        <p class="lead text-center text-danger">
+        Herhangi bir sonuç bulunamamıştır
+        </p>
+    {% endfor %}
+
+

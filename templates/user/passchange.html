@@ -1,0 +1,258 @@
+{% extends 'user/profile.html' %}
+{% load static %}
+{% block head %}
+<title>Parolayı Değiştir</title>
+         <link rel="stylesheet" href="{% static "css/cropper.min.css" %}">
+  <link rel="stylesheet" href="{% static "css/main.css" %}">
+    <script type="text/javascript" rel="script">
+    $(document).ready(function () {
+        var $window=$(this)
+$window.on("click",".post-content",function (e) {
+            var $this=$(this)
+            var $url=$this.attr("url")
+            if (!$(".gitme").is(e.target) //not clicked on .btn
+          && $(".gitme").has(e.target).length === 0) //clicked thing is not child of .btn
+      {
+        window.location.href = $url;
+      }
+    $('#oles').on('mousedown touchstart',function (e) {
+        e.preventDefault()
+        console.log("sel")
+
+    })
+        })
+        $(".block-but").click(function (e) {
+            e.preventDefault()
+           var $this=$(this)
+           var $href=$this.attr("href")
+           var $modal=$("#block")
+           var $del= $modal.find(".blocknow")
+            $del.attr("href",$href)
+           $modal.modal("show")
+        })
+        $(".followers_but").click(function (e) {
+           e.preventDefault()
+            var $this=$(this)
+            var $url=$this.attr("url")
+            var $username=$this.attr("username")
+            var $follow_type=$this.attr("follow_type")
+
+            var $modal=$("#fol_modal")
+            $modal.attr("follow_type",$follow_type)
+            if ($follow_type==="followeds"){
+                $modal.find(".modal-title").html("Takip Edilenler")
+            }
+            else if ($follow_type==="followers"){
+                $modal.find(".modal-title").html("Takipçiler")
+            }
+
+            $.ajax({
+                url:$url,
+                method:"GET",
+                dataType:'json',
+                data:{"username":$username},
+                success:function (data) {
+                    $modal.find("#follow_paginate").closest("div").remove()
+                    $modal.find(".modal-body #follow_list").html("").prepend(data.html).after(data.html_paginate)
+                    $modal.modal("show")
+                }
+            })
+        })
+        $('#follow_but').click(function () {
+            var $this = $(this);
+            var $url = $this.attr('url')
+            var $followed = $this.attr("followed")
+            var $follower = $this.attr("follower")
+            var data = {follower_username: $follower, followed_username: $followed}
+
+            $.ajax({
+                url: $url,
+                type: 'GET',
+                dataType: 'json',
+                data: data,
+                success: function (data) {
+
+                   if(data.is_valid){
+                        $this.html(data.msg)
+                        $("#user-following").html(data.html)
+                        if(data.active){
+                            $this.addClass("active")
+                        }
+                        else{
+                            $this.removeClass("active")
+                        }
+                    }
+                },
+                error: function () {
+
+                }
+
+            })
+
+        })
+        $window.on("click","#follow_paginate",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $follow_list=$this.closest(".modal").find("#follow_list")
+            var $follow_paginate=$this.closest(".modal").find("#follow_paginate")
+            var url=$this.attr("href")
+            var $follow_div=$this.closest(".row")
+            $.ajax({
+                url:url,
+                dataType:"json",
+                method:"GET",
+                beforeSend:function(){
+                },
+                success:function (data) {
+                    if(data.is_valid){
+                        $follow_list.append(data.html)
+                        $follow_paginate.remove()
+                        $follow_list.after(data.html_paginate)
+                    }
+                }
+            })
+        })
+        $('#fol_modal').on('click',"#follow_list .follow .follow-button",function () {
+            var $this=$(this)
+            var $modal_body=$this.closest(".modal-body")
+            var $modal=$($this.closest(".modal"))
+            var $follow_type=$modal.attr("follow_type")
+            var $owner=$modal.attr("owner")
+            var $span=$($this.closest(".follow").find("span"))
+            var followed=$span.attr("followed")
+            var follower=$span.attr("follower")
+            var url="{% url "following:follow_modal" %}"
+            var data={
+                owner:$owner,
+                follow_type:$follow_type,
+                followed_username: followed,
+                follower_username:follower }
+            $.ajax({
+                url:url,
+                type:"GET",
+                dataType:"json",
+                data:data,
+                success:function (data) {
+
+                        if(data.follow_case){
+                            $this.removeClass("btn-success")
+                            $this.addClass("btn-danger")
+                        }else{
+                            $this.removeClass("btn-danger")
+                            $this.add("btn-success")
+                        }
+                        $this.html(data.msg)
+                        $("#user-following").html(data.html_case)
+
+                    //}
+
+                }
+            })
+        })
+         $window.on("click",".start-post",function (e) {  /*Tartışma Başlat Modalının Açılmasını Sağlar*/
+            var $this=$(this)
+            var $modal=$("#exampleModalCenter")
+            $modal.modal("show")
+        })
+        $('#pbut').click(function (e) {
+            e.preventDefault()
+            window.deg=true
+            $('.avatar-view').click()
+            $('.avatar-form').attr("action","{% url 'user:yeter' 'profile' %}")
+        })
+        $('#cbut').click(function (e) {
+            e.preventDefault()
+            window.deg=false
+            $('.avatar-view').click()
+            $('.avatar-form').attr("action","{% url 'user:yeter' 'cover' %}")
+        })
+
+         $('#pbutm').click(function (e) {
+            e.preventDefault()
+            window.deg=true
+            $('.avatar-view').click()
+            $('.avatar-form').attr("action","{% url 'user:yeter' 'profile' %}")
+        })
+        $('#cbutm').click(function (e) {
+            e.preventDefault()
+            window.deg=false
+            $('.avatar-view').click()
+            $('.avatar-form').attr("action","{% url 'user:yeter' 'cover' %}")
+        })
+
+    })
+
+    </script>
+{% endblock %}
+{% block page %}
+    {% load crispy_forms_tags %}
+<div id="page-contents">
+          <div class="row">
+            <div class="col-md-3">
+
+              <!--Edit Profile Menu-->
+               <ul class="edit-menu">
+              	<li ><i class="icon ion-ios-information-outline"></i><a href="{% url "user:settings" %}">Kişisel Bilgi</a></li>
+              	<li class="active"><i class="icon ion-ios-locked-outline"></i><a href="{% url "user:passchange" %}">Parolayı Değiştir</a></li>
+              </ul>
+            </div>
+            <div class="col-md-7">
+
+              <!-- Change Password
+              ================================================= -->
+              <div class="edit-profile-container">
+                <div class="block-title">
+                  <h4 class="grey"><i class="icon ion-ios-locked-outline"></i>Parolayı Değişti</h4>
+                  <div class="line"></div>
+                  <p>PieThink güvenliğiniz için parolanızı üç ayda bir değiştirmenizi önerir.</p>
+                  <div class="line"></div>
+                </div>
+                <div class="edit-block">
+                  <form method="post" action="{% url "user:passchange" %}">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Kaydet" class="btn btn-danger">
+        </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 static">
+
+              <!--Sticky Timeline Activity Sidebar-->
+              <div class="col-md-2 static">
+              <div id="sticky-sidebar">
+                <h4 class="grey">Aktiviteler</h4>
+                  {% for act in activities  %}
+                  {% if act.tell_me_what_is_this == 1 %}
+                  <div class="feed-item">
+                  <div class="live-activity">
+                    <p><a href="" class="profile-link">{{act.user.userprofile.user_full_name}}</a> bir içeriği oyladı.</p>
+                    <p class="text-muted">{{act.activity_date|timesince}}</p>
+                  </div>
+                </div>
+                   {% elif act.tell_me_what_is_this == 2 %}
+                      <div class="feed-item">
+                  <div class="live-activity">
+                    <p><a href="" class="profile-link">{{act.user.userprofile.user_full_name}}</a> bir içeriğe yorum yaptı.</p>
+                    <p class="text-muted">{{act.activity_date|timesince}}</p>
+                  </div>
+                </div>
+                      {% elif act.tell_me_what_is_this == 3 %}
+                      <div class="feed-item">
+                  <div class="live-activity">
+                    <p><a href="" class="profile-link">{{act.user.userprofile.user_full_name}}</a> bir tartışma başlattı.</p>
+                    <p class="text-muted">{{act.activity_date|timesince}}</p>
+                  </div>
+                </div>
+                  {% endif %}
+                  {% endfor %}
+
+
+
+
+              </div>
+          </div>
+            </div>
+          </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+<div class="hidden-xs hidden-sm">
+    <li><a href="{% url "user:followers" user.username %}" class="btn" id="follower-number"> Takipçi {{user.userprofile.get_follower_count}}</a></li>
+<li><a href="{% url "user:followeds" user.username %}" class="btn" id="followed-number" > Takip Edilen {{user.userprofile.get_followed_count}}</a></li>
+</div>
+<div class="hidden-lg hidden-md">
+    <br>
+<a href="{% url "user:followers" user.username %}" class="btn btn-link" id="follower-number"> Takipçi {{user.userprofile.get_follower_count}}</a>
+<a href="{% url "user:followeds" user.username %}" class="btn btn-link" id="followed-number" > Takip Edilen {{user.userprofile.get_followed_count}}</a>
+</div>

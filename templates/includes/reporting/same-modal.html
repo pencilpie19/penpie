@@ -1,0 +1,29 @@
+
+{% load crispy_forms_tags %}
+<div class="modal fade " id="same" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  >
+  <div class="modal-dialog  modal-dialog-centered" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+          <h3><span class="">Bu tartışmanın daha önce açıldığını mı düşünüyorsun?</span></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+        </button>
+      </div>
+
+<form class="samenow" action="" method="post">
+{% csrf_token %}
+      <div class="modal-body">
+
+              {{same_form|crispy}}
+
+
+      </div>
+      <div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Boşver</button>
+          <button type="submit" class="btn btn-danger " >Bildir</button>
+
+      </div>
+ </form>
+    </div>
+  </div>
+</div>

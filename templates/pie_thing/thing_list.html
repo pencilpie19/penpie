@@ -1,0 +1,44 @@
+{% extends "pie_thing/layout.html" %}
+{% block head %}
+    <title>Tartışılanlar</title>
+{% endblock %}
+{% block body %}
+    <div class="title">
+              <h2>Tartışılanlar </h2>
+            <hr>
+            </div>
+            {% for thing in things %}
+            <div class="post-content">
+                <table>
+                  <tr>
+                    <th id="agenda-number" rowspan="2"> {{ forloop.counter }} </th>
+                    <th id="agenda-text" style="padding: 20px 0px 0px 2px"> <a href="{% url "pie_thing:thing" thing.id %}">{{thing.title}} | {{ thing.opt1 }} V {{ thing.opt2 }} </a> <span id="note-comment-number"> ● {{ thing.get_comment_count }} yorum</span>
+                    </th>
+                    <th rowspan="2">
+                      <div class="del_or_rep" id="flag-agenda">
+                      <a href="#" alt="Sikayet"> <i class="fa fa-flag"></i> </a>
+                    </div>
+                    </th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="progress" style="height: 15px;">
+                          {% if thing.get_percent != "zero" %}
+
+                        <div class="progress-bar color1" role="progressbar" style="width: {{thing.get_percent.1}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar color2" role="progressbar" style="width: {{thing.get_percent.3}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar color3" role="progressbar" style="width: {{thing.get_percent.2}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                          {% else %}
+                                                <div class="progress-bar progress-bar-striped color2" role="progressbar" style="width: 100%; " aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> Henüz kimse yok</div>
+
+                          {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+            </div><!-- 1 end -->
+            {% endfor %}
+
+
+
+{% endblock %}

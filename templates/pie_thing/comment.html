@@ -1,0 +1,396 @@
+{% extends "pie_thing/layout.html" %}
+{% load pie_thing_filters %}
+
+{% block head %}
+    <title>Pencilpie'dan Piething</title>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $window=$(this);
+        {% if request.user.is_authenticated %}
+            function go() {
+            }
+            {% else %}
+            function go() {
+                window.location={% url "user:members" %}
+
+            }
+        {% endif %}
+        $window.on("click",".repost-but",function (e) {
+            go()
+            e.preventDefault()
+            console.log("hello")
+            var $this=$(this)
+            var $url=$this.attr("href")
+            var $furl=$this.attr("url")
+            var $modal=$window.find("#repost")
+            var $form=$modal.find(".repostnow")
+                $form.attr("action",$furl)
+            var $div=$window.find("#comment")
+            $.ajax({
+                url: $url,
+                type: 'GET',
+                dataType: "json",
+                success:function (data) {
+
+                   $div.html(data.form_html)
+                    $modal.modal("show")
+                    console.log()
+                }
+            })
+        }).on("submit",".repostnow",function (e) {
+            go()
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#repost")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".rep-but",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this)
+            var $modal=$("#report")
+                $modal.modal("show")
+            var $form=$modal.find(".reportnow")
+            var $href=$this.attr("href")
+                $form.attr("action",$href)
+        }).on("submit",".reportnow",function (e) {
+            go()
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#report")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".same-but",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this)
+            var $modal=$("#same")
+                $modal.modal("show")
+            var $form=$modal.find(".samenow")
+            var $href=$this.attr("href")
+                $form.attr("action",$href)
+        }).on("submit",".samenow",function (e) {
+            go()
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#same")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".del-but",function (e) {
+            go()
+            e.preventDefault()
+           var $this=$(this)
+           var $href=$this.attr("href")
+           var $modal=$("#areusure")
+           var $del= $modal.find(".deletenow")
+            $del.attr("href",$href)
+            $modal.modal("show")
+
+        }) .on("click",".deletenow",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this)
+            var $div=$window.find("#child-list")
+            var $url=$this.attr("href")
+            var $modal=$("#areusure")
+            $.ajax({
+                url:$url,
+                method:"GET",
+                data:{},
+                success:function (data) {
+                    $div.html(data.child_html)
+                    $modal.modal('hide')
+                }
+            })
+
+        })
+        $window.on("click",".sup-but",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this);
+            var $url =$this.attr("href")
+            var $div=$this.closest("div").parent()
+
+            $.ajax({
+
+                url:$url,
+                method:"GET",
+                data:{},
+                success: function (data) {
+                    $div.html(data.reaction_html)
+
+                }
+            })
+        }).on("click",".sup-count",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this)
+            var $url=$this.attr("url")
+            var $modal=$("#comment_sup_modal")
+            $.ajax({
+                url:$url,
+                method:"GET",
+                dataType:"json",
+                beforeSend:function () {
+
+                    $modal.modal("show")
+                },
+                success:function (data) {
+                    $modal.find(".modal-body").html(data.html)
+
+                },
+                error:function () {
+                }
+            })
+
+        })
+        $window.on("click",".reply-but",function (e) {
+            go()
+            e.preventDefault();
+
+            var $this=$(this)
+            var $parent=$this.closest("div").parent().parent()
+            var $href = $this.attr("href")
+            var $comment_id=$this.attr("comment_id")
+            $.ajax({
+                url: $href,
+                type:"GET",
+                dataType:"json",
+                data:{comment_id: $comment_id,typo:"typo"},
+                success:function (data) {
+                    var $form_html =data.form_html;
+                    $parent.find(".child-form").html($form_html)
+
+
+                },
+                error:function () {
+
+                }
+            })
+        })
+        $window.on("click",".options",function (e) {
+            go()
+            e.preventDefault();
+            var $this=$(this)
+            var $href=$this.attr("href")
+            var $opt=$this.attr("opt")
+            var $id=$this.attr("id")
+            var $div=$(".opening-comment")
+            $.ajax({
+                url:$href,
+                type:"GET",
+                dataType:"json",
+                data:{opt:$opt,id:$id},
+                success:function (data) {
+                    console.log($opt)
+                    var $form_html=data.form_html
+                    $div.html($form_html)
+
+
+                },
+                error:function (data) {
+                    console.log("big error")
+                }
+            })
+
+        })
+
+    })
+</script>
+{% endblock %}
+{% load static %}
+{% block body %}
+    {% if comment.is_anon %}
+             <div  class="post-content infinite-item">
+
+              <div class="post-container">
+
+                <img src="{% static "images/anonim.png" %}" alt="user" class="profile-photo-md pull-left" />
+                <div class="post-detail">
+                  <div class="user-info">
+                    <h5><a  class="profile-link" style="color: #2f2fa2;">İsimsiz </a> <span class="following"></span>
+
+                      <div class="del_or_rep">
+                        <span class="post-time" style="color: #2f2fa2;"><i class="fa fa-history"></i> {{ comment.created_date|short_date }} </span>
+
+    {% if comment.user == request.user %}
+
+
+        <a  href="{% url "pie_thing:delete_comment" comment.id 2 %}"   class=" text-muted del-but" ><i class="icon ion-android-delete"></i></a>
+    {% else %}
+
+        <a  href="{% url "pie_thing:report_comment" comment.id %}"  class=" text-info rep-but" ><i class="fa fa-flag"></i></a>
+        {% include "includes/reporting/report-modal.html" with report_form=report_form %}
+    {% endif %}
+                      </div>
+                    </h5>
+                  {% if comment.opt == 1 %}
+                     <p class="text-muted"><a href="{% url "pie_thing:thing" comment.content_object.id %}">{{comment.content_object}}</a> konusunda <b>{{comment.content_object.opt1}}</b> tarafını savundu</p>
+                 {% elif comment.opt == 2 %}
+                     <p class="text-muted"><a href="{% url "pie_thing:thing" comment.content_object.id %}">{{comment.content_object}}</a> konusunda <b>{{comment.content_object.opt2}}</b> tarafını savundu</p>
+                 {% elif comment.opt == 3 %}
+                      <p class="text-muted"><a href="{% url "pie_thing:thing" comment.content_object.id %}">{{comment.content_object}}</a> konusunda <b>{{comment.content_object.opt3}}</b></p>
+
+                 {% endif %}
+
+                  </div>
+                  <div class="line-divider"></div>
+                  <div class="post-text">
+                    <p>{{ comment.content }}</p>
+                    {% if comment.photo %}
+                    <ul class="news-photos">
+                      <li>
+                        <div class="img-wrapper" data-toggle="modal" data-target=".{{comment.id}}">
+                          <img src="{{comment.photo.url}}" alt="photo" />
+                        </div>
+                       <div class="modal fade {{comment.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <img src="{{comment.photo.url}}" alt="photo" />
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                      </ul>
+                      {% endif %}
+                  </div>
+
+
+                <div class="row interaction">
+                    {% include "includes/supporting/comment_reaction.html" with thing=comment.content_object %}
+                </div>
+
+             <div class="line-divider"></div>
+
+             <div class="child-form">
+             </div>
+                </div>
+              <div id="child-list">
+            {% include "includes/comment/child-review.html" with comment=comment %}
+        </div>
+              </div>
+
+
+            </div>
+
+    {% else %}
+         <div  class="post-content infinite-item">
+
+              <div class="post-container">
+
+                <img src="{{comment.user.userprofile.get_profile_photo}}" alt="user" class="profile-photo-md pull-left" />
+                <div class="post-detail">
+                  <div class="user-info">
+                    <h5><a href="{% url "user:profile" comment.user %}" class="profile-link" style="color: #2f2fa2;">{{comment.user.userprofile.user_full_name}} </a> <span class="following">*{{comment.user}}</span>
+
+                      <div class="del_or_rep">
+                        <span class="post-time" style="color: #2f2fa2; font-size:small"><i class="fa fa-history"></i> {{ comment.created_date|short_date }} </span>
+
+    {% if comment.user == request.user %}
+
+
+        <a  href="{% url "pie_thing:delete_comment" comment.id 2 %}"   class=" text-muted del-but" ><i class="icon ion-android-delete"></i></a>
+    {% else %}
+
+        <a  href="{% url "pie_thing:report_comment" comment.id %}"  class=" text-info rep-but" ><i class="fa fa-flag"></i></a>
+        {% include "includes/reporting/report-modal.html" with report_form=report_form %}
+    {% endif %}
+                      </div>
+                    </h5>
+                  {% if comment.opt == 1 %}
+                     <p class="text-muted"><a href="{% url "pie_thing:thing" comment.content_object.id %}">{{comment.content_object}}</a> konusunda <b>{{comment.content_object.opt1}}</b> tarafını savundu</p>
+                 {% elif comment.opt == 2 %}
+                     <p class="text-muted"><a href="{% url "pie_thing:thing" comment.content_object.id %}">{{comment.content_object}}</a> konusunda <b>{{comment.content_object.opt2}}</b> tarafını savundu</p>
+                 {% elif comment.opt == 3 %}
+                      <p class="text-muted"><a href="{% url "pie_thing:thing" comment.content_object.id %}">{{comment.content_object}}</a> konusunda <b>{{comment.content_object.opt3}}</b></p>
+
+                 {% endif %}
+
+                  </div>
+                  <div class="line-divider"></div>
+                  <div class="post-text">
+                    <p>{{ comment.content }}</p>
+                    {% if comment.photo %}
+                    <ul class="news-photos">
+                      <li>
+                        <div class="img-wrapper" data-toggle="modal" data-target=".{{comment.id}}">
+                          <img src="{{comment.photo.url}}" alt="photo" />
+                        </div>
+                       <div class="modal fade {{comment.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <img src="{{comment.photo.url}}" alt="photo" />
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                      </ul>
+                      {% endif %}
+                  </div>
+
+
+                <div class="row interaction">
+                    {% include "includes/supporting/comment_reaction.html" with thing=comment.content_object %}
+                </div>
+
+             <div class="line-divider"></div>
+
+             <div class="child-form">
+             </div>
+                </div>
+              <div id="child-list">
+            {% include "includes/comment/child-review.html" with comment=comment %}
+        </div>
+              </div>
+
+
+            </div>
+
+    {% endif %}
+     {% include "includes/deleting/comment-delete-modal.html" %}
+{% endblock %}

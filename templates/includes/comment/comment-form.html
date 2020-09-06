@@ -1,0 +1,155 @@
+<!--Thing için yapılacak yorum formu-->
+    {% load crispy_forms_tags %}
+    {% load static %}
+            <a href="" id="rec-but">Tartışmalarla ilgili tavsiyelerimizi duymak isteyebilirsin</a>
+  <div class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" id="rec" aria-hidden="true"  >
+  <div class="modal-dialog modal-dialog-centered" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+          <h3><span class="text-green">Söyleyeceğimiz bazı şeyler var</span></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+        </button>
+      </div>
+      <div class="modal-body">
+         <p align="left" style="margin-top: 0.2cm; margin-bottom: 0cm; font-weight: normal; line-height: 150%">
+<font color="#333333"><font face="Ubuntu"><font size="4" style="font-size: 16pt">Tartışırken
+dikkate alabileceğin bir kaç tavsiye vermek  istiyoruz;</font></font></font></p>
+<p style="margin-top: 0.2cm; margin-bottom: 0cm; font-weight: normal; line-height: 150%">
+<br/>
+
+</p>
+<p style="margin-top: 0.2cm; margin-bottom: 0cm; line-height: 150%"><font color="#666666"><font face="Ubuntu"><font size="4" style="font-size: 16pt"><b>-Paniğe
+Kapılma;</b></font></font></font></p>
+<p style="margin-top: 0.2cm; margin-bottom: 0cm; font-weight: normal; line-height: 150%">
+<font color="#000000"><font face="Ubuntu"><font size="4" style="font-size: 14pt">	Aslında
+verebileceğimiz en iyi tavsiye bu. Lütfen tartışırken paniğe
+kapılma ve sakin ol. Kendini gergin hissettiysen tartışmaya devam
+etme ve biraz soluklan.</font></font></font></p>
+<p style="margin-top: 0.2cm; margin-bottom: 0cm; line-height: 150%"><font color="#666666"><font face="Ubuntu"><font size="4" style="font-size: 16pt"><b>-Bazı
+şeylerin net bir cevabı yoktur;</b><font color="#000000"><span style="font-weight: normal">	</span></font></font></font></font></p>
+<p style="margin-top: 0.2cm; margin-bottom: 0cm; font-weight: normal; line-height: 150%">
+<font color="#000000"><font face="Ubuntu"><font size="4" style="font-size: 16pt"><font size="4" style="font-size: 14pt">	Bazı
+şeyleri denkleme dökemezsin. Bazı tartışmalar kişisel görüşle
+alakalıdır. Tartışmalarda istediğin tavrı takınabilirsin.
+PieThing bu konuda seni özgür bırakıyor. Ancak </font><font size="4" style="font-size: 14pt">unutma
+ki her zaman düşünceni kanıtlayabilirsin diye bir kural yok.
+Karşı tarafa da hoşgörülü davranmanı tavsiye ederiz. </font></font></font></font>
+</p>
+<p style="margin-top: 0.2cm; margin-bottom: 0cm; line-height: 150%"><font color="#666666"><font face="Ubuntu"><font size="4" style="font-size: 16pt"><b>-Bazen
+farklı düşünmek gerekir;</b></font></font></font></p>
+<p style="margin-top: 0.2cm; margin-bottom: 0cm; font-weight: normal; line-height: 150%">
+<font color="#000000"><font face="Ubuntu"><font size="4" style="font-size: 16pt"><font size="4" style="font-size: 14pt">	</font><font size="4" style="font-size: 14pt">Önemli
+olan düşüncenin doğru olması değil. Önemli olan senin
+düşünceni nasıl aktardığın. Kelimeleri iyi kullan. Sık sık
+aynı şeyi söylememeyi dene ve en önemlisi bir argüman sunacaksan
+onun daha önce sunulmadığından emin olmak için önceki yorumları
+oku. </font></font></font></font>
+</p>
+<p style="margin-top: 0.2cm; margin-bottom: 0cm; font-weight: normal; line-height: 150%">
+<font color="#000000"><font face="Ubuntu"><font size="4" style="font-size: 16pt"><font size="4" style="font-size: 14pt">	Elbette
+bu tavsiyelere uyup uymamak senin kararın. </font></font></font></font>
+</p>
+<p style="margin-top: 0.2cm; margin-bottom: 0cm; font-weight: normal; line-height: 150%">
+<font color="#000000"><font face="Ubuntu"><font size="4" style="font-size: 16pt"><font size="4" style="font-size: 14pt">	Ve
+en önemlisi unutma;
+
+</font></font></font></font>
+</p>
+<p style="margin-top: 0.4cm; margin-bottom: 0cm; font-weight: normal; line-height: 150%">
+
+</p>
+<p style="margin-top: 0.4cm; margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+
+
+</p>
+<p style="margin-top: 0.4cm; margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+<font color="#000000"><font face="Ubuntu"><font size="4" style="font-size: 16pt">	</font></font></font></p>
+          <img style="width: 100%" src="{% static "images/piethinglovesyou.png" %}" alt="">
+
+      </div>
+      <div class="modal-footer">
+        <button style="background-color: gray"  class="btn btn-dark-green" data-dismiss="modal">Anladım</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<form class="comment-form" action="{% url "pie_thing:add_comment" thing.id "thing" options "thing" %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+             {{ form.content }}
+            {{ form.photo }}
+          <label>{{form.is_anon}}Yorumunu isimsiz olarak yayınla.</label>
+
+    <button class="btn btn-send" id="send" type="submit" style="float: right;">Gönder</button>
+
+    <!--<input type="file" name="photo" class="add-image form-control" cols="50" rows="3" id="id_photo">-->
+    <img src="" id="profile-img-tag" width="200px" />
+    <span class="add-image"> <a class="photo-send" href="#"> <i id="img" class="fa fa-image"></i> </a> </span>
+
+
+</form>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#profile-img-tag').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('#rec-but').click(function (e) {
+        e.preventDefault()
+        var $modal=$("#rec")
+        $modal.modal("show")
+    })
+    $("#id_photo").change(function(){
+        readURL(this);
+    });
+
+        var $window=$(this);
+        var $thing_comment_list=$window.find("#thing-comment-list")
+
+        $('.photo-send').click(function (e) {
+            //$('#id_photo').click()
+        })
+        $('.comment-form').submit(function(e){
+        e.preventDefault();
+        $form = $(this)
+        var $url =$form.attr("action")
+        var formData = new FormData(this);
+        var $progress=$('#thing_progress')
+        $.ajax({
+            url: $url,
+            type: 'POST',
+            data: formData,
+
+            beforeSend:function(){
+
+                $('.content-box').html("")
+                $('.content-box').append("<div class=\"loading col-lg-12 text-center\" >\n" +
+                    "    <img style='max-height:80px;' src=\"{% static "images/com_loading.gif" %}\">\n" +
+                    "  </div>")
+            },
+            success: function (response) {
+
+                $thing_comment_list.html(response.thing_comment_html)
+                $progress.html(response.progress)
+                $('.content-box').html("")
+                window.taslak=false
+
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+    })
+</script>

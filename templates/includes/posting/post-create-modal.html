@@ -1,0 +1,23 @@
+<!--Yeni bir thing için oluşturmak için gerekli modal-->
+{% load crispy_forms_tags %}
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  >
+  <div class="modal-dialog modal-dialog-centered" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+          <h3><span class="text-green">Tartışma Başlat</span></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+        </button>
+      </div>
+        <form action="{% url "pie_thing:addThing" %}" method="post">
+            {% csrf_token %}
+      <div class="modal-body">
+            {{ thing_form|crispy }}
+      </div>
+      <div class="modal-footer">
+        <button  type="submit" class="btn btn-success">Paylaş</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,419 @@
+{% extends "pie_thing/layout.html" %}
+{% load static %}
+{% block head %}
+    <title>{{thing}}</title>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $window=$(this);
+        {% if request.user.is_authenticated %}
+            function go() {
+            }
+            {% else %}
+            function go() {
+                window.location="{% url "user:members" %}"
+
+            }
+        {% endif %}
+        var $div;
+        window.taslak=false;
+
+        $window.on("click",".post-content",function (e) {
+
+            var $this=$(this)
+            var $url=$this.attr("url")
+            if (!$(".gitme").is(e.target) //not clicked on .btn
+          && $(".gitme").has(e.target).length === 0) //clicked thing is not child of .btn
+      {
+        window.location.href = $url;
+      }
+
+
+        })
+        $window.on("click",".repost-but",function (e) {
+            go()
+            e.preventDefault()
+
+            var $this=$(this)
+            var $url=$this.attr("href")
+            var $furl=$this.attr("url")
+            var $modal=$window.find("#repost")
+            var $form=$modal.find(".repostnow")
+                $form.attr("action",$furl)
+            var $div=$window.find("#comment")
+            $.ajax({
+                url: $url,
+                type: 'GET',
+                dataType: "json",
+                success:function (data) {
+                   $div.html(data.form_html)
+                    $modal.modal("show")
+                }
+            })
+        }).on("submit",".repostnow",function (e) {
+            go()
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#repost")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".rep-but",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this)
+            var $modal=$("#report")
+                $modal.modal("show")
+            var $form=$modal.find(".reportnow")
+            var $href=$this.attr("href")
+                $form.attr("action",$href)
+
+        }).on("submit",".reportnow",function (e) {
+            go()
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#report")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".same-but",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this)
+            var $modal=$("#same")
+                $modal.modal("show")
+            var $form=$modal.find(".samenow")
+            var $href=$this.attr("href")
+                $form.attr("action",$href)
+        }).on("submit",".samenow",function (e) {
+            go()
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#same")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".rep-thing-but",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this)
+            var $modal=$("#report-thing")
+                $modal.modal("show")
+            var $form=$modal.find(".rtnow")
+            var $href=$this.attr("href")
+                $form.attr("action",$href)
+        }).on("submit",".rtnow",function (e) {
+            go()
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#report-thing")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".del-but",function (e) {
+            go()
+           e.preventDefault()
+           var $this=$(this)
+           $div=$this.closest("div").parent().parent().parent().parent().parent()
+           var $href=$this.attr("href")
+           var $modal=$("#areusure")
+           var $del= $modal.find(".deletenow")
+            $del.attr("href",$href)
+           $modal.modal("show")
+
+        })
+        .on("click",".deletenow",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this)
+            var $url=$this.attr("href")
+            var $modal=$("#areusure")
+
+            $.ajax({
+                url:$url,
+                method:"GET",
+                data:{"profile":"profile"},
+                success:function (data) {
+
+                    $modal.modal('hide')
+                    $div.remove()
+
+                }
+            })
+
+        })
+        $window.on("click",".sup-but",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this);
+            var $url =$this.attr("href")
+            var $div=$this.closest("div").parent()
+
+            $.ajax({
+
+                url:$url,
+                method:"GET",
+                data:{},
+                success: function (data) {
+                    $div.html(data.reaction_html)
+
+                }
+            })
+        }).on("click",".sup-count",function (e) {
+            go()
+            e.preventDefault()
+            var $this=$(this)
+            var $url=$this.attr("url")
+            var $modal=$("#comment_sup_modal")
+            $.ajax({
+                url:$url,
+                method:"GET",
+                dataType:"json",
+                beforeSend:function () {
+
+                    $modal.modal("show")
+                },
+                success:function (data) {
+                    $modal.find(".modal-body").html(data.html)
+
+                },
+                error:function () {
+                }
+            })
+
+        })
+        $window.on("click","#thing-comment-list  a.reply-but",function (e) {
+            go()
+            e.preventDefault()
+            console.log("1")
+            var $this=$(this)
+            var $parent=$this.closest("div").parent().parent()
+            var $href = $this.attr("href")
+            var $comment_id=$this.attr("comment_id")
+            $.ajax({
+                url: $href,
+                type:"GET",
+                dataType:"json",
+                data:{comment_id: $comment_id},
+                success:function (data) {
+
+                    var $form_html =data.form_html;
+                    $parent.find(".child-form").html($form_html)
+
+                },
+                error:function () {
+
+                }
+            })
+        })
+        $window.on("click",".photo-send",function (e) {
+            $("#id_photo").click()
+        })
+
+
+        $window.on("click",".options",function (e) {
+            go()
+            e.preventDefault();
+            var $this=$(this)
+            var $href=$this.attr("href")
+            var $opt=$this.attr("opt")
+            var $option=$this.attr("option")
+            var $id=$this.attr("id")
+            var $div=$(".content-box")
+            if(!window.taslak){
+                $.ajax({
+                url:$href,
+                type:"GET",
+                dataType:"json",
+                data:{opt:$opt,id:$id},
+                success:function (data) {
+
+                    var $form_html=data.form_html
+
+                    $div.html($form_html)
+                    var $com=$div.find("#id_content")
+                    if ($opt=="opt1"){
+                        $com.attr("style","background-color: rgba(246, 76, 113, 0.1)")
+                        $com.attr("placeholder","'"+$option+"'" + " Tarafını Savunuyorsun")
+                    }else if($opt=="opt2"){
+                        $com.attr("style","background-color: rgba(47, 47, 162, 0.1)")
+                        $com.attr("placeholder","'"+$option+"'" + " Tarafını Savunuyorsun")
+                    }else{
+                        $com.attr("style","background-color: rgba(85, 61, 103, 0.05)")
+                        $com.attr("placeholder","'"+$option+"'")
+                    }
+
+                    $('#id_photo').attr("style","display:none;")
+                    window.taslak=true
+
+                },
+                error:function (data) {
+                    console.log("big error")
+                }
+            })
+
+            }
+            else{
+                var $com=$div.find("#id_content")
+                    if ($opt=="opt1"){
+                        $com.attr("style","background-color: rgba(246, 76, 113, 0.1)")
+                        $com.attr("placeholder","'"+$option+"'" + " Tarafını Savunuyorsun")
+                    }else if($opt=="opt2"){
+                        $com.attr("style","background-color: rgba(47, 47, 162, 0.1)")
+                        $com.attr("placeholder","'"+$option+"'" + " Tarafını Savunuyorsun")
+                    }else{
+                        $com.attr("style","background-color: rgba(85, 61, 103, 0.05)")
+                        $com.attr("placeholder","'"+$option+"'")
+                    }
+                    var sec;
+                    if ($opt=="opt1"){
+                        sec=1
+                    }
+                    else if($opt=="opt2")
+                    {
+                        sec=2
+                    }
+                    else {
+                        sec=3
+                    }
+                    var url ="/pie_thing/add_comment/"+"{{ thing.id }}"+"/thing/"+sec+"/thing"
+                    $('.comment-form').attr("action",url)
+                    //$('#id_photo').attr("style","display:none;")
+            }
+
+        })
+        $('[data-toggle="tooltip"]').tooltip();
+
+
+
+    })
+
+</script>
+
+{% endblock %}
+{% block body %}
+{% load crispy_forms_tags %}
+
+
+            <!-- Başlık -->
+            <div class="discussion-title">
+                <h4>{{ thing.title }}</h4>
+              <h2> {{ thing.opt1 }} <span> V </span> {{thing.opt2}} </h2>
+            </div>
+
+            <!-- Yüzde bar-->
+            <div class="progress" id="thing_progress">
+             {% include "includes/progress/progress.html" %}
+            </div>
+
+            <!-- Tartışmayı açan kişi , time bilgisi ve şikayet et butonu-->
+            <div class="user-bar">
+              <img src="{{ thing.author.userprofile.get_profile_photo }}" alt="Profile Fotoğrafı" class="profile-photo-xxs"> <a href="{% url "user:profile" thing.author %}"> {{thing.author.userprofile.user_full_name}} </a>
+              <a href="{% url "pie_thing:repthing" thing.id %}" alt="Şikayet Et" data-toggle="tooltip" title="Tartışmayı Şikayet Et" id="dicussion-report" class="rep-thing-but"> <i class="fa fa-flag"></i> </a>
+                                {% include "includes/reporting/report-thing.html" with rt_form=rt_form %}
+
+              <a href="{% url "pie_thing:same_thing" thing.id %}" data-toggle="tooltip" title="Bu tartışma daha önce açıldıysa bildir." alt="Aynı Tartışma" id="dicussion-report" class="same-but"> <i class="fa fa-hand-lizard-o"></i> </a>
+                {% include "includes/reporting/same-modal.html" with same_form=same_form %}
+              <span> <i class="fa fa-history"></i>  {{ thing.created_date|timesince }} </span>
+            </div>
+
+            <div class="line-divider"></div>
+
+            <!--Tartışma içeriği-->
+            <div class="post-content gitme">
+              <div class="post-detail">
+                <div class="post-text text-center" id="discussion-content">
+                  {{thing.content}}
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Senin fikrin nedir ? -->
+            <div class="line-divider"></div>
+            <h4 style="color:#000;margin-bottom: 15px;text-align: center;"> Senin fikrin nedir ?</h4>
+
+            <div class="choice">
+              <a href="{% url "pie_thing:get-comment-from"%}" class="btn options option1" opt="opt1" id="{{ thing.id }}" option="{{ thing.opt1 }}" >{{ thing.opt1 }}</a>
+              <a href="{% url "pie_thing:get-comment-from"%}" class="btn options option2" opt="opt3" id="{{ thing.id }}" option="{{ thing.opt3 }}">{{ thing.opt3 }}</a>
+              <a href="{% url "pie_thing:get-comment-from"%}" class="btn options option3" opt="opt2" id="{{ thing.id }}" option="{{ thing.opt2 }}">{{ thing.opt2 }}</a>
+            </div>
+
+             <!-- Fikrini yaz textarea-->
+            <div class="form-group content-box">
+
+            </div>
+
+    <br>
+
+
+
+
+    <br>
+            {% include "includes/reporting/report-modal.html" with report_form=report_form %}
+     {% include "includes/deleting/comment-delete-modal.html" %}
+
+
+    <div id="thing-comment-list">
+
+    {% include "includes/supporting/comment_sup_modal.html" %}
+
+        {% include "includes/comment/comment-list-partial.html" with thing=thing %}
+    </div>
+
+{% endblock %}

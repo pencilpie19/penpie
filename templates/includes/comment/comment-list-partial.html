@@ -1,0 +1,4 @@
+<!--Yorumların listelenmesi-->
+{% for comment in thing.get_thing_comment  %}
+    {% include "includes/comment/thing-comment.html" with thing=thing comment=comment %}
+{% endfor %}

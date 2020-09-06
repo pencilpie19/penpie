@@ -1,0 +1,351 @@
+<!--Yorumların listelenmesi-->
+{% load pie_thing_filters %}
+{% block head %}
+
+{% endblock %}
+{% for object in user.userprofile.get_profile_river  %}
+
+{% if object.tell_me_what_is_this %}
+{% if object.content_object.is_father %}
+    {% if not object.content_object.is_anon %}
+        <div url="{% url "pie_thing:comment" object.content_object.id %}" style="cursor: pointer" class="post-content">
+
+                <!--Post Date-->
+    <div class="post-date hidden-xs hidden-sm">
+        <a data-toggle="tooltip" title="{{object.content_object.content_object}}" href="{% url "pie_thing:thing" object.content_object.content_object.id %}"><h6>{{object.content_object.content_object|truncatechars:20}}</h6></a>
+        <p class="text-grey">{{ object.content_object.created_date|tarih_bukucu}} </p>
+    </div><!--Post Date End-->
+
+    <div class="post-container">
+
+                <img src="{{object.content_object.user.userprofile.get_profile_photo}}" alt="user" class="profile-photo-md pull-left gitme" />
+                <div class="post-detail">
+                  <div class="user-info">
+                    <h5><a href="{% url "user:profile" object.content_object.user %}" class="profile-link gitme" style="color: #2f2fa2;">{{object.content_object.user.userprofile.user_full_name}} </a> <span class="following">*{{object.content_object.user}}</span>
+
+                      <div class="del_or_rep ">
+                        <span class="post-time" style="color: #2f2fa2; font-size: small"><i class="fa fa-history"></i> {{ object.content_object.created_date|short_date }} </span>
+
+    {% if object.content_object.user == request.user %}
+        <a  href="{% url "pie_thing:delete_comment" object.content_object.id 1 %}"   class=" text-muted del-but gitme" ><i class="icon ion-android-delete"></i></a>
+    {% else %}
+
+        <a  href="{% url "pie_thing:report_comment" object.content_object.id %}"  class=" text-info rep-but gitme" ><i class="fa fa-flag"></i></a>
+        {% include "includes/reporting/report-modal.html" with report_form=report_form %}
+    {% endif %}
+                      </div>
+                    </h5>
+                  {% if object.content_object.opt == 1 %}
+                     <p class="text-muted "><a  href="{% url "pie_thing:thing" object.content_object.content_object.id %}">{{object.content_object.content_object}}</a> konusunda <b>{{object.content_object.content_object.opt1}}</b> tarafını savundu</p>
+                 {% elif object.content_object.opt == 2 %}
+                     <p class="text-muted "><a  href="{% url "pie_thing:thing" object.content_object.content_object.id %}">{{object.content_object.content_object}}</a> konusunda <b>{{object.content_object.content_object.opt2}}</b> tarafını savundu</p>
+                 {% elif object.content_object.opt == 3 %}
+                      <p class="text-muted "><a  href="{% url "pie_thing:thing" object.content_object.content_object.id %}">{{object.content_object.content_object}}</a> konusunda <b>{{object.content_object.content_object.opt3}}</b></p>
+
+                 {% endif %}
+
+                  </div>
+                  <div class="line-divider"></div>
+                  <div class="post-text gitme">
+                    <p>{{ object.content_object.content }}</p>
+                    {% if object.content_object.photo %}
+                    <ul class="news-photos gitme">
+                      <li>
+                        <div class="img-wrapper" data-toggle="modal" data-target=".{{object.content_object.id}}">
+                          <img src="{{object.content_object.photo.url}}" alt="photo" />
+                        </div>
+                          <div class="modal fade {{object.content_object.id}} gitme" tabindex="-1" role="dialog" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <img src="{{object.content_object.photo.url}}" alt="photo" />
+                            </div>
+                          </div>
+                        </div>
+
+                      </li>
+                      </ul>
+                      {% endif %}
+                  </div>
+
+
+                <div class="row interaction">
+                    {% include "includes/supporting/comment_reaction.html" with thing=object.content_object.content_object comment=object.content_object %}
+                </div>
+                {% if object.content_object.get_child_comment_count != 0 %}
+                <div id="show-full-comment">
+                  <a href="{% url "pie_thing:comment" object.content_object.id %}">Tümünü Görüntüle</a>
+                </div>
+                {% endif %}
+
+             <div class="child-form">
+             </div>
+                </div>
+              </div>
+</div>
+    {% endif %}
+
+{% endif %}
+{% else %}
+<div class="post-content gitme">
+<div class="post-date hidden-xs hidden-sm">
+    {% if object.content_object.reposting_comment.is_anon %}
+
+        <h5><a href="#" class="gitme"> <i class="fa fa-external-link"></i> </a>İsimsiz</h5>
+        {% else %}
+        <h5><a href="{% url "user:profile" object.content_object.reposting_comment.user %}" class="gitme"> <i class="fa fa-external-link"></i> </a> {{ object.content_object.reposting_comment.user }} </h5>
+    {% endif %}
+    <p class="text-grey">{{ object.river_date|tarih_bukucu }}</p>
+              </div>
+              <div class="post-container">
+                <img src="{{ object.user.userprofile.get_profile_photo}}" alt="user" class="profile-photo-md pull-left" />
+                <div class="post-detail">
+                  <div class="user-info">
+
+                    <h5><a href="{% url "user:profile" object.user %}" class="profile-link"> {{object.user.userprofile.user_full_name}} </a> <span class="following">*{{object.user}}</span>
+
+                      <div class="del_or_rep">
+                        <span class="post-time" style="font-size: small"><i class="fa fa-history"></i> {{ object.river_date|short_date }} </span>
+                            {% if object.user == request.user %}
+                                                      <a  href="{% url "pie_thing:delete_repost" object.content_object.id  %}"   class=" text-muted del-rep-but gitme" ><i class=" gitme icon ion-android-delete"></i></a>
+
+                            {% endif %}
+                      </div>
+                    </h5>
+                      {% if object.content_object.reposting_comment.is_anon %}
+
+                    <p class="text-muted"> <a class="gitme">İsimsiz bir yorumu</a>  alıntıladı.</p>
+                    {% else %}
+                     <p class="text-muted"> <a class="gitme" href="{% url "user:profile" object.content_object.reposting_comment.user %}">{{ object.content_object.reposting_comment.user.userprofile.user_full_name }}</a> kullanıcısını alıntıladı.</p>
+                       {% endif%}
+                          </div>
+                  <div class="line-divider"></div>
+                {% if object.content_object.reposting_comment.is_anon %}
+                    <div class="post-text">
+
+                      {% if object.content_object.repost_content %}
+                                          <p>{{object.content_object.repost_content}}</p>
+
+                      {% endif %}
+
+                    <div class="post-repost">
+                      <div class="post-container">
+
+                          <div class="user-info">
+                            <h5><a class="profile-link gitme"> İsimsiz </a> <span class="following">| {{ object.content_object.reposting_comment.content_object }}</span></h5>
+                              <div class="post-text-repost">
+                                <p>{{ object.content_object.reposting_comment.content }}.</p>
+                            </div>
+                          </div>
+                         </div>
+                     </div>
+                   </div>
+
+                    {% else %}
+                                      <div class="post-text">
+
+                      {% if object.content_object.repost_content %}
+                                          <p>{{object.content_object.repost_content}}</p>
+
+                      {% endif %}
+
+                    <div class="post-repost">
+                      <div class="post-container">
+
+                          <div class="user-info">
+                            <h5><a href="{% url "user:profile" object.content_object.reposting_comment.user %}" class="profile-link"> {{ object.content_object.reposting_comment.user.userprofile.user_full_name }} </a> <span class="following">*{{ object.content_object.reposting_comment.user}}| {{ object.content_object.reposting_comment.content_object }}</span></h5>
+                              <div class="post-text-repost">
+                                <p>{{ object.content_object.reposting_comment.content }}.</p>
+                            </div>
+                          </div>
+                         </div>
+                     </div>
+                   </div>
+
+                {% endif %}
+
+
+                </div>
+              </div>
+            </div>
+
+{% endif %}
+
+
+{% endfor %}
+     {% include "includes/deleting/comment-delete-modal.html" %}
+
+<script>
+    $(document).ready(function () {
+        var $window=$(this)
+        var $div;
+        $window.on("click",".del-but",function (e) {
+           e.preventDefault()
+           var $this=$(this)
+           var $href=$this.attr("href")
+            $div=$this.closest("div").parent().parent().parent().parent().parent()
+
+           var $modal=$("#areusure")
+           var $del= $modal.find(".deletenow")
+            $del.attr("href",$href)
+            $modal.modal("show")
+
+        })
+        $window.on("click",".del-rep-but",function (e) {
+           e.preventDefault()
+           var $this=$(this)
+           var $href=$this.attr("href")
+            $div=$this.closest("div").parent().parent().parent().parent().parent()
+
+
+           var $modal=$("#areusure")
+           var $del= $modal.find(".deletenow")
+            $del.attr("href",$href)
+            $modal.modal("show")
+
+        })
+            .on("click",".deletenow",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+
+            //var $div=$this.closest("div").parent().parent().parent().parent()
+            var $url=$this.attr("href")
+            var $modal=$("#areusure")
+
+            $.ajax({
+                url:$url,
+                method:"GET",
+                data:{"profile":"profile"},
+                success:function (data) {
+
+                    $modal.modal('hide')
+                    $div.remove()
+
+                }
+            })
+
+        })
+        $window.on("click",".repost-but",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $url=$this.attr("href")
+            var $furl=$this.attr("url")
+            var $modal=$window.find("#repost")
+            var $form=$modal.find(".repostnow")
+                $form.attr("action",$furl)
+            var $div=$window.find("#comment")
+            $.ajax({
+                url: $url,
+                type: 'GET',
+                dataType: "json",
+                success:function (data) {
+
+                   $div.html(data.form_html)
+                    $modal.modal("show")
+                    console.log()
+                }
+            })
+        }).on("submit",".repostnow",function (e) {
+            e.preventDefault();
+
+            $form = $(this)
+            var $modal=$("#repost")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".rep-but",function (e) {
+            e.preventDefault()
+            var $this=$(this)
+            var $modal=$("#report")
+                $modal.modal("show")
+            var $form=$modal.find(".reportnow")
+            var $href=$this.attr("href")
+                $form.attr("action",$href)
+        }).on("submit",".reportnow",function (e) {
+            e.preventDefault();
+            $form = $(this)
+            var $modal=$("#report")
+            var $url =$form.attr("action")
+            var formData = new FormData(this);
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+
+                $modal.modal("hide")
+
+            },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+        })
+        $window.on("click",".del-but",function (e) {
+           e.preventDefault()
+           var $this=$(this)
+           var $href=$this.attr("href")
+           var $modal=$("#areusure")
+           var $del= $modal.find(".deletenow")
+            $del.attr("href",$href)
+           $modal.modal("show")
+
+        })
+        $window.on("click",".sup-but",function (e) {
+            e.preventDefault()
+            var $this=$(this);
+            var $url =$this.attr("href")
+            var $div=$this.closest("div").parent()
+            $.ajax({
+
+                url:$url,
+                method:"GET",
+                data:{},
+                success: function (data) {
+                    $div.html(data.reaction_html)
+
+                }
+            })
+        })
+        $window.on("click",".reply-but",function (e) {
+            e.preventDefault();
+
+            var $this=$(this)
+            var $parent=$this.closest("div").parent().parent()
+            var $href = $this.attr("href")
+            var $comment_id=$this.attr("comment_id")
+            $.ajax({
+                url: $href,
+                type:"GET",
+                dataType:"json",
+                data:{comment_id: $comment_id},
+                success:function (data) {
+
+                    var $form_html =data.form_html;
+                    $parent.find(".child-form").html($form_html)
+
+                },
+                error:function () {
+
+                }
+            })
+
+        })
+         $('[data-toggle="tooltip"]').tooltip();
+
+    })
+</script>

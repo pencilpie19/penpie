@@ -1,0 +1,29 @@
+{% for child in comment.get_child_comment.reverse %}
+<div class="post-container" id="child-review">
+                  <img src="{{child.user.userprofile.get_profile_photo}}" alt="user" class="profile-photo-sm pull-left" />
+                  <div class="post-detail">
+
+                    <div class="user-info">
+                      <h5><a href="{% url "user:profile" child.user %}" class="profile-link"> {{child.user.userprofile.user_full_name}} </a> <span class="following">*{{ child.user }}</span>
+
+                        <div class="del_or_rep">
+                          <span class="post-time"><i class="fa fa-history"></i>{{ child.created_date|timesince }}  </span>
+                          {% if child.user == request.user %}
+
+                    <a  href="{% url "pie_thing:delete_comment" child.id 2 %}"   class=" text-muted del-but" ><i class="icon ion-android-delete"></i></a>
+                {% else %}
+
+        <a  href="{% url "pie_thing:report_comment" child.id %}"  class=" text-info rep-but" ><i class="fa fa-flag"></i></a>
+        {% include "includes/reporting/report-modal.html" with report_form=report_form %}
+    {% endif %}
+                        </div>
+                      </h5>
+                    </div>
+                    <div class="line-divider"></div>
+                    <div class="post-text">
+                      <p>{{ child.content }}</p>
+                    </div>
+
+                  </div>
+                </div>
+{% endfor %}

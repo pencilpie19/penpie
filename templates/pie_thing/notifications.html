@@ -1,0 +1,82 @@
+{% extends "pie_thing/layout.html" %}
+{% block head %}
+    <script type="text/javascript">
+    $(document).ready(function (e) {
+        var $href=$("#read_it").attr("url")
+        $.ajax({
+            url:$href,
+            type:"GET",
+            dataType:"json",
+            success:function (data) {
+            console.log("read")
+            }
+        })
+
+        $('.nobox').click(function (e) {
+            var $this=$(this)
+
+            var $url=$this.attr("url")
+            if (!$("<a>").is(e.target)
+          && $("<a>").has(e.target).length === 0)
+            {
+                        window.location.href = $url;
+            }
+        })
+    })
+    </script>
+    <title>Bildirimler</title>
+{% endblock %}
+{% block body %}
+   <div class="title" id="read_it" url="{% url "pie_thing:read_noti" %}">
+              <h2>Bildirimler </h2>
+            <hr>
+            </div>
+
+{% for no in noti   %}
+{% if no.content_object.user != request.user %}
+{% if no.tell_me_what_is_this == 1 %}
+    {% if no.content_object.sup_type == 1  %}
+     <div class="post-content nobox {% if no.is_unread %} bcnot {% endif %}" style="cursor: pointer;"  url="{% url "pie_thing:comment" no.content_object.comment.id %}" >
+              <div class="notifications-box">
+                <i class="fa fa-level-up" id="comment-up" ></i> <a href="{% url "user:profile" no.content_object.user %}">{{ no.content_object.user.userprofile.user_full_name }} ({{ no.content_object.user }})</a> yaptığın bir <a href="{% url "pie_thing:comment" no.content_object.comment.id %}">yorumunu</a>  destekledi.
+                <span class="post-time {% if no.is_unread %} text-info {% endif %}"><i class="fa fa-history"></i> {{ no.notification_date|timesince }} </span>
+              </div>
+    </div>
+     {% else %}
+      <div class="post-content nobox {% if no.is_unread %} bcnot {% endif %}" style="cursor: pointer;" url="{% url "pie_thing:comment" no.content_object.comment.id %}">
+              <div class="notifications-box">
+                <i class="fa fa-level-down" id="comment-up" ></i> <a href="{% url "user:profile" no.content_object.user %}">{{ no.content_object.user.userprofile.user_full_name }} ({{ no.content_object.user }})</a> yaptığın bir <a href="{% url "pie_thing:comment" no.content_object.comment.id  %}">yorumu</a>  desteklemedi.
+                <span class="post-time {% if no.is_unread %} text-info {% endif %}"><i class="fa fa-history"></i> {{ no.notification_date|timesince }}</span>
+              </div>
+    </div>
+    {% endif %}
+
+
+{% elif no.tell_me_what_is_this == 2 %}
+    <div class="post-content nobox {% if no.is_unread %} bcnot {% endif %}" style="cursor: pointer;" url="{% url "pie_thing:comment" no.content_object.object_id %}">
+              <div class="notifications-box">
+                  <i class="fa fa-comment" id="discussion-comment"></i>  <a href="{% url "user:profile" no.content_object.user  %}">{{ no.content_object.user.userprofile.user_full_name }} ({{ no.content_object.user }})</a> yaptığın bir <a href="{% url "pie_thing:comment" no.content_object.object_id %}">yorumu</a>  yanıtladı.
+                  <span class="post-time {% if no.is_unread %} text-info {% endif %}"><i class="fa fa-history"></i> {{ no.notification_date|timesince }}</span>
+                </div>
+            </div>
+{% elif no.tell_me_what_is_this == 3 %}
+    <div class="post-content nobox {% if no.is_unread %} bcnot {% endif %}" style="cursor: pointer;" url="{% url "user:profile" no.content_object.follower %}">
+              <div class="notifications-box">
+                  <i class="fa fa-plus-square" id="new-follower"></i> <a href="{% url "user:profile" no.content_object.follower %}">{{ no.content_object.follower.userprofile.user_full_name }} ({{ no.content_object.follower }})</a> seni takip etti.
+                    <span class="post-time {% if no.is_unread %} text-info {% endif %}"><i class="fa fa-history"></i> {{ no.notification_date|timesince }}</span>
+              </div>
+    </div>
+{% elif no.tell_me_what_is_this == 4 %}
+    <div class="post-content nobox {% if no.is_unread %} bcnot {% endif %}" style="cursor: pointer;" url="{% url "user:profile" no.content_object.user %}">
+              <div class="notifications-box">
+                  <i class="fa fa-comment" id="discussion-comment"></i>  <a href="{% url "user:profile" no.content_object.user %}">{{ no.content_object.user.userprofile.user_full_name }} ({{ no.content_object.user }})</a> senin
+                  <a href="">yorumunu</a> alıntıladı.
+                  <span class="post-time {% if no.is_unread %} text-info {% endif %}"><i class="fa fa-history"></i> {{ no.notification_date|timesince }}</span>
+                </div>
+            </div>
+{% endif %}
+
+{% endif %}
+{% endfor %}
+
+{% endblock %}

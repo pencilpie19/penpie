@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Pencipie sunar; Piething!" />
+		<meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page,Sosyal Ağ,Tartışma" />
+		<meta name="robots" content="index, follow" />
+    <!-- Stylesheets
+    ================================================= -->
+		<link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" />
+		<link rel="stylesheet" href="{% static "css/style.css" %}" />
+		<link rel="stylesheet" href="{% static "css/ionicons.min.css" %}" />
+    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}" />
+    <link href="{% static "css/emoji.css" %}" rel="stylesheet">
+
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="{% static "images/favicon.png" %}"/>
+        {% block head %}
+
+		{% endblock %}
+	</head>
+  <body>
+
+    <!-- Header
+    ================================================= -->
+		{% include "includes/navbar.html" %}
+    <!--Header End-->
+    
+    {% block body %}
+    
+    {% endblock %}
+
+    <!-- Footer
+    ================================================= -->
+
+
+    <!--preloader-->
+    <div id="spinner-wrapper">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts
+    ================================================= -->
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/jquery.sticky-kit.min.js" %}"></script>
+    <script src="{% static "js/jquery.scrollbar.min.js" %}"></script>
+    <script src="{% static "js/script.js" %}"></script>
+     <script src="{% static "js/cropper.min.js" %}"></script>
+  <script src="{% static "js/croppermain.js" %}"></script>
+  </body>
+</html>

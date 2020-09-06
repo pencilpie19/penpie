@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Pencipie sunar; Piething!" />
+		<meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page,Sosyal Ağ,Tartışma"
+		<meta name="robots" content="index, follow" />
+		<title>PencilPie'dan PieThing</title>
+        <link rel="shortcut icon" type="image/png" href="{% static "images/favicon.png" %}"/>
+    <!-- Stylesheets
+    ================================================= -->
+		<link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" />
+		<link rel="stylesheet" href="{% static "css/style.css"  %}"/>
+		<link rel="stylesheet" href="{% static "css/ionicons.min.css" %}" />
+    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+        {% block head %}
+        
+        {% endblock %}
+    <!--Favicon-->
+	</head>
+	<body>
+
+    <!-- Header
+    ================================================= -->
+		<header id="header-inverse">
+      <nav class="navbar navbar-default navbar-fixed-top menu">
+        <div class="container">
+
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="newsfeed.html"><img src="{% static "images/logo.png" %}" alt="logo" /></a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container -->
+      </nav>
+    </header>
+    <!--Header End-->
+
+    <!-- Landing Page Contents
+    ================================================= -->
+    {% block body %}
+    
+    {% endblock %}
+
+    <!-- Scripts
+    ================================================= -->
+    <script src="{% static "js/jquery-3.1.1.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/jquery.appear.min.js" %}"></script>
+		<script src="{% static "js/jquery.incremental-counter.js" %}"></script>
+    <script src="{% static "js/script.js" %}"></script>
+
+	</body>
+</html>

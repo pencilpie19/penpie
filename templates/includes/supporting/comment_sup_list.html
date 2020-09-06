@@ -1,0 +1,11 @@
+<!--Yorumu destekleyenleri sıralayan liste-->
+{% for user in user_list %}
+<div class="follow col-lg-12">
+    <img src="{{ user.userprofile.get_profile_photo }}" style="width: 70px;" class="img-circle">
+    <a href=""><span>{{ user.username }}</span></a>
+</div>
+{% endfor %}
+
+
+
+

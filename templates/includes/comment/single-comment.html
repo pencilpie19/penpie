@@ -1,0 +1,69 @@
+{% load pie_thing_filters %}
+
+<div url="{% url "pie_thing:comment" comment.id %}"  style="cursor: pointer" class="post-content infinite-item">
+
+              <div class="post-container">
+
+                <img src="{{comment.user.userprofile.get_profile_photo}}" alt="user" class="profile-photo-md pull-left gitme" />
+                <div class="post-detail">
+                  <div class="user-info">
+                    <h5><a href="{% url "user:profile" comment.user %}" class="profile-link gitme" style="color: #2f2fa2;">{{comment.user.userprofile.user_full_name}} </a> <span class="following">*{{comment.user}}</span>
+
+                      <div class="del_or_rep">
+                        <span class="post-time" style="color: #2f2fa2; font-size: small"><i class="fa fa-history"></i> {{ comment.created_date|short_date }} </span>
+
+    {% if comment.user == request.user %}
+        <a  href="{% url "pie_thing:delete_comment" comment.id 1 %}"   class=" text-muted del-but gitme" ><i class="icon ion-android-delete"></i></a>
+    {% else %}
+
+        <a  href="{% url "pie_thing:report_comment" comment.id %}"  class=" text-info rep-but gitme" ><i class="fa fa-flag"></i></a>
+        {% include "includes/reporting/report-modal.html" with report_form=report_form %}
+    {% endif %}
+                      </div>
+                    </h5>
+                  {% if comment.opt == 1 %}
+                     <p class="text-muted"><a href="{% url "pie_thing:thing" comment.content_object.id %}">{{comment.content_object}}</a> konusunda <b>{{comment.content_object.opt1}}</b> tarafını savundu</p>
+                 {% elif comment.opt == 2 %}
+                     <p class="text-muted"><a href="{% url "pie_thing:thing" comment.content_object.id %}">{{comment.content_object}}</a> konusunda <b>{{comment.content_object.opt2}}</b> tarafını savundu</p>
+                 {% elif comment.opt == 3 %}
+                      <p class="text-muted"><a href="{% url "pie_thing:thing" comment.content_object.id %}">{{comment.content_object}}</a> konusunda <b>{{comment.content_object.opt3}}</b></p>
+
+                 {% endif %}
+
+                  </div>
+                  <div class="line-divider"></div>
+                  <div class="post-text gitme">
+                    <p>{{ comment.content }}</p>
+                    {% if comment.photo %}
+                    <ul class="news-photos gitme">
+                      <li>
+                        <div class="img-wrapper" data-toggle="modal" data-target=".{{comment.id}}">
+                          <img src="{{comment.photo.url}}" alt="photo" />
+                        </div>
+                       <div class="modal fade {{comment.id}} gitme" tabindex="-1" role="dialog" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <img src="{{comment.photo.url}}" alt="photo" />
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                      </ul>
+                      {% endif %}
+                  </div>
+
+
+                <div class="row interaction">
+                    {% include "includes/supporting/comment_reaction.html" with thing=thing %}
+                </div>
+                {% if comment.get_child_comment_count != 0 %}
+                <div id="show-full-comment">
+                  <a href="{% url "pie_thing:comment" comment.id %}">Tümünü Görüntüle</a>
+                </div>
+                {% endif %}
+
+             <div class="child-form">
+             </div>
+                </div>
+              </div>
+            </div>

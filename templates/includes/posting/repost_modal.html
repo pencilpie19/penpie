@@ -1,0 +1,29 @@
+
+{% load crispy_forms_tags %}
+<div class="modal fade gitme" id="repost" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  >
+  <div class="modal-dialog modal-dialog-centered" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+          <h3><span class="text-green">Bu yorumu alıntıla </span></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+<form class="repostnow" action="" method="post">
+      <div class="modal-body">
+
+              {% csrf_token %}
+              {{ repost_form|crispy }}
+
+          <div id="comment">
+
+          </div>
+
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Boşver</button>
+        <button  type="submit" class="btn btn-success">Paylaş</button>
+      </div>
+</form>
+    </div>
+  </div>
+</div>

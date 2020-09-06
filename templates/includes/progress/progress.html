@@ -1,0 +1,8 @@
+{% if thing.get_percent != "zero" %}
+
+<div class="progress-bar progress-bar-striped color1" role="progressbar" style="width: {{thing.get_percent.1}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> <b> %{{thing.get_percent.1}} </b>{{thing.opt1}}</div>
+ <div class="progress-bar progress-bar-striped color2" role="progressbar" style="width: {{thing.get_percent.3}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> <b> %{{thing.get_percent.3}} </b>Tarafsız</div>
+ <div class="progress-bar progress-bar-striped color3" role="progressbar" style="width: {{thing.get_percent.2}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"><b>%{{thing.get_percent.2}}</b> {{ thing.opt2 }}</div>
+{% else %}
+ <div class="progress-bar progress-bar-striped color2" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> Henüz kimse yok</div>
+{% endif %}

@@ -1,0 +1,63 @@
+{% load static %}
+{% if comment.is_anon %}
+    <div class="post-content">
+              {% if comment.photo %}
+    <img src="{{comment.photo.url}}" alt="post-image" class="img-responsive post-image">
+    {% endif %}
+              <div class="post-container">
+                <img src="{% static "images/anonim.png" %}" alt="user" class="profile-photo-md pull-left">
+                <div class="post-detail">
+             <div class="user-info">
+                 {% if comment.opt == 1 %}
+                     <h5><a  class="profile-link">İsimsiz</a> <span class="following"><span class="text-green">"{{comment.content_object.opt1}}" tarafını savunyor.</span></span></h5>
+                 {% elif comment.opt == 2 %}
+                     <h5><a  class="profile-link ">İsimsiz</a> <span class="following "><span class="text-danger">"{{comment.content_object.opt2}}" tarafını savunyor.</span></span></h5>
+                 {% elif comment.opt == 3 %}
+                     <h5><a  class="profile-link ">İsimsiz</a> <span class="following "><span class="text-muted">"{{comment.content_object.opt3}}"</span></span></h5>
+
+                 {% endif %}
+                 <p class="text-muted">{{ comment.created_date|timesince }} önce</p>
+             </div>
+
+                  <div class="line-divider"></div>
+             <div class="post-text">
+                 <p>{{ comment.content }}</p>
+             </div>
+             <div class="line-divider"></div>
+
+
+                </div>
+              </div>
+            </div>
+{% else %}
+<div class="post-content">
+              {% if comment.photo %}
+    <img src="{{comment.photo.url}}" alt="post-image" class="img-responsive post-image">
+    {% endif %}
+              <div class="post-container">
+                <img src="{{ comment.user.userprofile.get_profile_photo }}" alt="user" class="profile-photo-md pull-left">
+                <div class="post-detail">
+             <div class="user-info">
+                 {% if comment.opt == 1 %}
+                     <h5><a href="timeline.html" class="profile-link">{{comment.user.userprofile.user_full_name}}</a> <span class="following"><span class="text-green">"{{comment.content_object.opt1}}" tarafını savunyor.</span></span></h5>
+                 {% elif comment.opt == 2 %}
+                     <h5><a href="timeline.html" class="profile-link ">{{comment.user.userprofile.user_full_name}}</a> <span class="following "><span class="text-danger">"{{comment.content_object.opt2}}" tarafını savunyor.</span></span></h5>
+                 {% elif comment.opt == 3 %}
+                     <h5><a href="timeline.html" class="profile-link ">{{comment.user.userprofile.user_full_name}}</a> <span class="following "><span class="text-muted">"{{comment.content_object.opt3}}"</span></span></h5>
+
+                 {% endif %}
+                 <p class="text-muted">{{ comment.created_date|timesince }} önce</p>
+             </div>
+
+                  <div class="line-divider"></div>
+             <div class="post-text">
+                 <p>{{ comment.content }}</p>
+             </div>
+             <div class="line-divider"></div>
+
+
+
+                </div>
+              </div>
+            </div>
+{% endif %}

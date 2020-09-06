@@ -1,0 +1,39 @@
+<!--Yoruma yapılacak yorum formu-->
+<form class="child-comment-form" action="{% url "pie_thing:add_comment" comment.id "comment" 0 "single" %}" method="post">
+    {% csrf_token %}
+    <div class="post-comment">
+    <img src="{{request.user.userprofile.get_profile_photo}}" alt="" class="profile-photo-sm pull-left">
+    {{ form.content }}
+        <button href="" class="btn btn-link pull-right"> <i class="fa fa-reply"></i> Yanıtla</button>
+    </div>
+</form>
+<script type="text/javascript">
+   $(document).ready(function () {
+        var $window=$(this);
+       $window.on('submit','.child-comment-form',function (e) {
+            e.preventDefault()
+            e.stopImmediatePropagation();
+            var $this=$(this)
+            var $div=$window.find("#child-list")
+            var $method=$this.attr('method')
+            var $data=$this.serialize()
+            var $url =$this.attr("action")
+            console.log($div.attr("class"))
+            $.ajax({
+                url:$url,
+                type:$method,
+                dataType:'json',
+                data:$data,
+                success:function (data) {
+                   $this.remove()
+                   $div.html(data.thing_comment_html)
+
+                },
+                error:function () {
+
+                }
+            })
+
+        })
+    })
+</script>

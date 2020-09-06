@@ -1,0 +1,9 @@
+<!--Yoruma yapılacak yorum formu-->
+<form class="child-comment-form gitme" action="{% url "pie_thing:add_comment" comment.id "comment" 0 "news" %}" method="post">
+    {% csrf_token %}
+    <div class="post-comment">
+    <img src="{{request.user.userprofile.get_profile_photo}}" alt="" class="profile-photo-sm pull-left">
+    {{ form.content }}
+        <button href="" class="btn btn-link pull-right "> <i class="fa fa-reply"></i> Yanıtla</button>
+    </div>
+</form>

@@ -1,0 +1,101 @@
+{% extends "pie_thing/layout.html" %}
+{% load pie_thing_filters %}
+{% load static %}
+{% block head %}
+    <script type="text/javascript" rel="script">
+    $(document).ready(function () {
+        var is_open_thing=false;
+        $('#id_content').attr("rows",5)
+        $('#id_title').attr("maxlength",30)
+        $('#id_opt1').attr("maxlength",12)
+        $('#id_opt2').attr("maxlength",12)
+        $('.tartisma-buton').click(function (e) {
+            if (!is_open_thing) {
+                $('#tbut').animate({'opacity': 0}, 400, function () {
+                    $('#tbut').html('Boşver').animate({'opacity': 1}, 400);
+                });
+                is_open_thing=true
+            }else{
+                $('#tbut').animate({'opacity': 0}, 400, function () {
+                    $('#tbut').html('Tartışma Başlat').animate({'opacity': 1}, 400);
+                    is_open_thing=false
+
+                });
+            }
+        })
+
+
+
+         $('[data-toggle="tooltip"]').tooltip();
+    })
+    </script>
+    <script src="{% static "js/form-discussion.js" %}"></script>
+    <title>Pencilpie'dan Piething</title>
+{% endblock %}
+{% block body %}
+            <!-- Tartışma Başlatma Kutusu
+            =================================================-->
+
+            <!-- Post Create Box
+            ================================================= -->
+            <div class="tartisma-kutusu">
+            	<div class="row">
+                    <a href="{% url "user:profile" request.user %}"><img  src="{{ request.user.userprofile.get_profile_photo}}" alt="profile photo" ></a>
+                  <p class="tartisma-buton" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><a id="tbut" href="#"> Tartışma Başlat</a> </p>
+                  <div class="collapse" id="collapseExample">
+                    <div style="padding: 8px;margin-top: 30px;margin-bottom:5px;color: #000000;">
+                      <form action="{% url "pie_thing:addThing" %}" method="post">
+                                      {% csrf_token %}
+
+                        <div class="form-group float-label-control">
+                            <label for="">Tartışma Başlığı</label>
+                            {{thing_form.title}}
+                        </div>
+                        <div class="form-group float-label-control">
+                            <label for="">Açıklama</label>
+                            {{thing_form.content}}
+                        </div>
+                      <div class="row">
+                          <div class="col-xs-6 col-md-6 col-lg-6 form-group float-label-control">
+                            <label for="" style="margin-left:8px;">Seçenek 1</label>
+                            {{thing_form.opt1}}
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6 form-group float-label-control">
+                          <label for="" style="margin-left:8px;">Seçenek 2 </label>
+                            {{thing_form.opt2}}
+                      </div>
+                    </div>
+                    <div class="row">
+
+                  <div class="col-xs-4 col-md-3 pull-right">
+                    <button class="form-start" type="submit"> Başlat </button>
+                </div>
+                    </div>
+
+                    </form>
+
+                    </div>
+                  </div>
+            	</div>
+            </div><!-- Post Create Box End-->
+
+
+    <div id="thing-comment-list">
+
+            {% include "includes/news_river/news_river.html" with comments=comments %}
+    </div>
+{% endblock %}
+{% block javascript %}
+  <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
+
+{% endblock %}

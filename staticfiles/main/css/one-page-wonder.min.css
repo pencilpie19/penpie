@@ -1,0 +1,166 @@
+body {
+    font-family: Century Gothic;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Catamaran;
+    font-weight: 800!important;
+}
+p{
+    font-size: 17px;
+}
+
+#piecode{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#piemusic{
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.bg-black{
+    background-color: #000000 !important;
+}
+
+.rounded-pill {
+    border-radius: 5rem
+}
+
+.btn-piething{
+    width: 100%;
+    margin-top: 8px;
+    background: #F64C72;
+    padding: 7px 25px;
+    border: none;
+    font-size: 16px;
+    color: #fff;
+    position: relative;
+    font-weight: 600;
+    outline: none;
+    border-radius: 3px;  
+    font-family: Century Gothic;
+    border-bottom: 3px solid #242582;
+  }
+  
+  .btn.btn-piething a{
+    text-decoration: none;
+  }
+  
+  .btn-piething:hover{
+    background: #242582;
+    border-bottom-color: #F64C72;
+    color: #fff;
+    transition: all 1s;
+  }
+  
+  .btn-piething:active{
+    transition: all 0s;
+    background: #131341;
+    color: #fff;
+  }
+
+  .btn-piecode{
+    width: 100%;
+    margin-top: 8px;
+    background: #F64C72;
+    padding: 7px 25px;
+    border: none;
+    font-size: 16px;
+    color: #fff;
+    position: relative;
+    font-weight: 600;
+    outline: none;
+    border-radius: 10px;  
+    font-family: Century Gothic;
+  }
+  
+  .btn.btn-piecode a{
+    text-decoration: none;
+  }
+  
+  .btn-piecode:hover{
+    background: #242582;
+    color: #fff;
+    transition: all 1s;
+  }
+  
+  .btn-piecode:active{
+    transition: all 0s;
+    background: #131341;
+    color: #fff;
+  }
+
+.navbar-custom {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: rgba(0, 0, 0, .7)
+}
+
+.navbar-custom .navbar-brand {
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: .1rem;
+    font-weight: 700
+}
+
+.navbar-custom .navbar-nav .nav-item .nav-link {
+    text-transform: uppercase;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .1rem
+}
+
+header.masthead {
+    position: relative;
+    overflow: hidden;
+    padding-top: calc(7rem + 72px);
+    padding-bottom: 7rem;
+    background: linear-gradient(0deg, #000 0, #000 100%);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: scroll;
+    background-size: cover
+}
+
+header.masthead .masthead-content {
+    z-index: 1;
+    position: relative
+}
+
+header.masthead .masthead-content .masthead-heading {
+    font-size: 4rem
+}
+
+header.masthead .masthead-content .masthead-subheading {
+    font-size: 2rem
+}
+
+
+header.masthead .bg-circle-1 {
+    height: 90rem;
+    width: 90rem;
+    bottom: -55rem;
+    left: -55rem
+}
+
+header.masthead .bg-circle-2 {
+    height: 50rem;
+    width: 50rem;
+    top: -25rem;
+    right: -25rem
+}
+
+header.masthead .bg-circle-3 {
+    height: 20rem;
+    width: 20rem;
+    bottom: -10rem;
+    right: 5%
+}
+
+header.masthead .bg-circle-4 {
+    height: 30rem;
+    width: 30rem;
+    top: -5rem;
+    right: 35%
+}
+

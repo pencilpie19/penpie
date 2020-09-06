@@ -1,0 +1,155 @@
+{% extends "user/layoutfirst.html" %}
+{% block head %}
+
+    <style>
+    .wrap{
+   animation: caret 1s steps(1) infinite;
+   border-right: 0.08em solid #fff;
+  padding-right: 1px;
+}
+@keyframes caret {
+  50% {
+    border-color: transparent;
+  }
+}
+    </style>
+
+{% endblock %}
+{% block body %}
+    {% load static %}
+    {% load crispy_forms_tags %}
+    
+<div id="lp-register">
+
+
+    	<div class="container wrapper">
+        <div class="row">
+        	<div class="col-sm-5">
+            <div class="intro-texts">
+            	<h1 class="text-white">Hangi düşünce seni yansıtıyor?</h1>
+                <p>PieThing binlerce farklı düşüncede insanların belli taraflarını seçerek tartıştığı yerdir. <br><a  class="typewrite text-white" data-period="2000" >
+                    <span class="wrap"></span></a></p>
+
+            </div>
+          </div>
+        	<div class="col-sm-6 col-sm-offset-1">
+            <div class="reg-form-container">
+
+              <!-- Register/Login Tabs-->
+              <div class="reg-options">
+                <ul class="nav nav-tabs">
+                  <li class="{{ regActive }}"><a href="#register" data-toggle="tab">Kayıt Ol</a></li>
+                  <li class="{{logActive}}"><a href="#login" data-toggle="tab">Giriş Yap</a></li>
+                </ul><!--Tabs End-->
+              </div>
+
+              <!--Registration Form Contents-->
+              <div class="tab-content">
+                <div class="tab-pane {{ regActive }} " id="register">
+                  <h3>Kayıt Ol</h3>
+                  <p class="text-muted">Hemen kayıt ol ve binlerce düşünce arasından tarafını seç.</p>
+
+                  <!--Register Form-->
+                  <form action="{% url 'user:register' %}" method="post" id='registration_form' class="form-inline">
+                      {% csrf_token %}
+                    {{ reg|crispy }}
+                      <br>
+
+                  <button type="submit" class="btn btn-primary">Hemen Kayıt Ol</button>
+                  </form><!--Register Now Form Ends-->
+
+                </div><!--Registration Form Contents Ends-->
+
+                <!--Login-->
+                <div class="tab-pane {{logActive}}" id="login">
+                  <h3>Giriş Yap</h3>
+                  <p class="text-muted">Giriş yapman için gerekli olan bilgileri gir</p>
+
+                  <!--Login Form-->
+                  <form action="{% url "user:login" %}" method="post" id='Login_form'>
+                      {% csrf_token %}
+                        {{ log|crispy }}
+                      <p><a href="#">Parolanı mı unuttun?</a></p>
+                  <button type="submit" class="btn btn-primary">Giriş Yap</button>
+                  </form><!--Login Form Ends-->
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-6">
+
+            <!--Social Icons-->
+            <ul class="list-inline social-icons">
+              <li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
+              <li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
+              <li><a href="#"><i class="icon ion-social-googleplus"></i></a></li>
+              <li><a href="#"><i class="icon ion-social-pinterest"></i></a></li>
+              <li><a href="#"><i class="icon ion-social-linkedin"></i></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+     <script>
+    var TxtType = function(el, toRotate, period) {
+        this.toRotate = toRotate;
+        this.el = el;
+        this.loopNum = 0;
+        this.period = parseInt(period, 10) || 2000;
+        this.txt = '';
+        this.tick();
+        this.isDeleting = false;
+    };
+
+    TxtType.prototype.tick = function() {
+
+        var i = this.loopNum % this.toRotate.length;
+        var fullTxt = this.toRotate[i];
+
+        if (this.isDeleting) {
+        this.txt = fullTxt.substring(0, this.txt.length - 1);
+        } else {
+        this.txt = fullTxt.substring(0, this.txt.length + 1);
+        }
+
+        this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+        var that = this;
+        var delta = 200 - Math.random() * 100;
+
+        if (this.isDeleting) { delta /= 2; }
+
+        if (!this.isDeleting && this.txt === fullTxt) {
+        delta = this.period;
+        this.isDeleting = true;
+        } else if (this.isDeleting && this.txt === '') {
+        this.isDeleting = false;
+        this.loopNum++;
+        delta = 500;
+        }
+
+        setTimeout(function() {
+        that.tick();
+        }, delta);
+    };
+
+    window.onload = function() {
+        var elements = document.getElementsByClassName('typewrite');
+        for (var i=0; i<elements.length; i++) {
+            //var toRotate = elements[i].getAttribute('data-type');
+            var toRotate='[ "Tartışmaya hazır mısın?", "PencilPie Sunar", "İşte PieThing", "Tartışabilir miyiz?" ,"PieThing seni seviyor :)" ,"Kabul et ki \'pie\' kelimesini çok sevdin.","Karşı tarafı ikna edebilmek zordur.", "Paniğe kapılma!" ]'
+            var period = elements[i].getAttribute('data-period');
+            if (toRotate) {
+              new TxtType(elements[i], JSON.parse(toRotate), period);
+            }
+        }
+    };
+    </script>
+    <!--preloader-->
+    <div id="spinner-wrapper">
+      <div class="spinner"></div>
+    </div>
+{% endblock %}

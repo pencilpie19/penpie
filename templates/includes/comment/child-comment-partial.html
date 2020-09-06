@@ -1,0 +1,17 @@
+{% if comment.is_parent %}
+
+                 {% for child_comment in comment.get_child_comment %}
+
+
+
+                     <div class="post-comment">
+                         <img src="{{child_comment.user.userprofile.get_profile_photo}}" alt="" class="profile-photo-sm">
+
+                         <p><a href="timeline.html" class="profile-link">{{child_comment.user.userprofile.user_full_name}} </a>
+
+
+                              {{ child_comment.comment_date|timesince }} önce
+                         <br>{{ child_comment.content }}</p>
+                     </div>
+                 {% endfor %}
+{% endif %}

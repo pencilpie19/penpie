@@ -1,0 +1,48 @@
+
+
+                      <div class="col-xs-3 col-md-3"> <a href="{% url "pie_thing:supstaff" comment.id 1 %}" class="sup-but gitme"> <i class="fa fa-arrow-up {% if request.user.username in comment.get_sup_comment_user %} text-red {% endif %}" ></i> {{comment.get_sup_count}} </a> </div>
+                       <div class="col-xs-3 col-md-3"> <a href="{% url "pie_thing:supstaff" comment.id 0 %}" class="sup-but gitme"> <i class="fa fa-arrow-down {% if request.user.username in comment.get_un_sup_comment_user %} text-red {% endif %}" ></i> {{comment.get_un_sup_count}} </a> </div>
+                      <div class="col-xs-3 col-md-3"> <a href="{% url "pie_thing:anchor" comment.id %}" url="{% url "pie_thing:repost" comment.id %}" class="repost-but gitme "> <i class="fa fa-external-link"></i> {{comment.get_repost_count}}</a></div>
+                      <div class="col-xs-3 col-md-3"> <a comment_id="{{ comment.id }}" href="{% url "pie_thing:get-child-comment-form" "child" %}" class="reply-but gitme "> <i class="fa fa-comment"></i> {{comment.get_child_comment_count}} </a></div>
+                   <!--  <div class="col-xs-3 col-md-3"> <a href="#" class="share2 gitme" id="{{ comment.id }}"> <i class="fa fa-share-alt gitme col-xs-3 col-md-3"></i> </a></div> -->
+
+{% include "includes/posting/repost_modal.html" with comment=comment %}
+<div class="modal fade gitme" id="share2people" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  >
+  <div class="modal-dialog  modal-dialog-centered" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+          <h3><span class="">Yorumun linkini kopyala..</span></h3>
+
+      </div>
+        <div class="modal-body">
+                    <input type="text" class="form-control shar" name="" id="">
+        </div>
+        <div class="modal-footer">
+                    <button class="btn btn-black" id="copy2text" >Kopyala</button>
+
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('.share2').click(function (e) {
+        e.preventDefault()
+        var $this=$(this)
+        var $id=$this.attr("id")
+         var $modal=$('#share2people')
+        $modal.modal("show")
+
+        $('.shar').val("http://pencilpie.com/pie_thing/comment/"+$id)
+        $('#copy2text').click(function (e) {
+            e.preventDefault()
+            $('.shar').select()
+            $('#copy2text').text("Kopyalandı")
+            document.execCommand("copy");
+        })
+    })
+
+
+
+
+</script>
