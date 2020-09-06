@@ -25,7 +25,7 @@ SECRET_KEY = ')(*h-q)&*)e3%5h6e(!av-^wv4zf+y2f*#kxj3!nc_+qvb!f5w'
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-ALLOWED_HOSTS = ['pencilpie.com','www.pencilpie.com','104.248.92.235','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['pencilpie.com','www.pencilpie.com','161.35.89.187','localhost','127.0.0.1']
 
 
 # Application definition
